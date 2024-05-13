@@ -8,28 +8,28 @@ import 'package:permission_handler/permission_handler.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MainApp());
-  await requestPermission();
+  // await requestPermission();
   DependencyInjection.init();
 }
 
 Future<void> requestPermission() async {
-  // Meminta izin akses ke penyimpanan eksternal
-  // final PermissionStatus status = await Permission.storage.request();
-
-  // if (status.isGranted) {
-  //   // Izin diberikan, Anda dapat melanjutkan dengan logika aplikasi Anda di sini
-  //   print("Permission Granted");
-  // } else if (status.isDenied) {
-  //   // Izin ditolak
-  //   print("Permission Denied");
-  // } else if (status.isPermanentlyDenied) {
-  //   // Izin ditolak secara permanen, arahkan pengguna untuk mengaktifkannya di pengaturan
-  //   print("Permission Permanently Denied");
-  // }
+  for (var permission in [
+    Permission.photos,
+    Permission.camera,
+    Permission.location
+  ]) {
+    var status = await permission.request();
+    if (status.isGranted) {
+      //isGranted!
+      print("granted");
+    } else if (status.isPermanentlyDenied) {
+      openAppSettings();
+    }
+  }
 }
 
 class MainApp extends StatelessWidget {
-  final permissionPhotos = Permission.photos;
+  // final permissionPhotos = Permission.photos;
   // final Talker talker;
   const MainApp({
     Key? key,

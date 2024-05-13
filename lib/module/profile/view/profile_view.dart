@@ -93,41 +93,6 @@ class ProfileView extends StatefulWidget {
                   InkWell(
                     onTap: () async {
                       await Get.to(ProfileFormView());
-                      // showModalBottomSheet(
-                      //   context: context,
-                      //   builder: (BuildContext context) {
-                      //     return Container(
-                      //       padding: EdgeInsets.all(20.0),
-                      //       child: Column(
-                      //         mainAxisSize: MainAxisSize.min,
-                      //         children: <Widget>[
-                      //           // Input field for image
-                      //           ElevatedButton(
-                      //             onPressed: () {
-                      //               _pickImage(context);
-                      //             },
-                      //             child: Text('Select Image'),
-                      //           ),
-                      //           SizedBox(height: 20.0),
-                      //           TextFormField(
-                      //             decoration: InputDecoration(
-                      //               labelText: 'Nama',
-                      //             ),
-                      //           ),
-                      //           SizedBox(height: 20.0),
-                      //           ElevatedButton(
-                      //             onPressed: () {
-                      //               // Implement your editing logic here
-                      //               Navigator.of(context)
-                      //                   .pop(); // Close the bottom sheet
-                      //             },
-                      //             child: Text('Save'),
-                      //           ),
-                      //         ],
-                      //       ),
-                      //     );
-                      //   },
-                      // );
                     },
                     child: CircleAvatar(
                       radius: 16.0,

@@ -37,8 +37,6 @@ class LoginService {
       return LoginResult(success: true);
     } on DioError catch (e) {
       if (e.response != null && e.response!.statusCode == 500) {
-        // Kesalahan server dengan kode status 500
-        // print("Server error: ${e.message}");
         return LoginResult(success: false, code: '500');
       }
     }

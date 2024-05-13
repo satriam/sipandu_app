@@ -3,12 +3,12 @@ import 'package:hyper_ui/core_package.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DumpingService {
-  get() async {
+  Future<List> get() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
-
+    print(token);
     var response = await Dio().get(
-      "${ApiUrl.baseUrl}/api/dumpings",
+      "${ApiUrl.baseUrl}/api/dumpings?populate=*",
       options: Options(
         headers: {
           "Content-Type": "application/json",
@@ -17,6 +17,7 @@ class DumpingService {
       ),
     );
     Map obj = response.data;
+    print(obj["data"]);
     return obj["data"];
   }
 }
