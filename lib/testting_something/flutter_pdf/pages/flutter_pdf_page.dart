@@ -1,13 +1,6 @@
 import 'dart:developer';
-import 'package:hyper_ui/testting_something/flutter_pdf/service/permission.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter/material.dart';
-import 'package:hyper_ui/testting_something/flutter_pdf/model/customer_model.dart';
-import 'package:hyper_ui/testting_something/flutter_pdf/model/invoice_model.dart';
-import 'package:hyper_ui/testting_something/flutter_pdf/model/supplier_model.dart';
-import 'package:hyper_ui/testting_something/flutter_pdf/service/helper_invoice.dart';
-import 'package:hyper_ui/testting_something/flutter_pdf/service/helper_pdf_service.dart';
+import 'package:SiPandu/core.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class FlutterPdfPage extends StatefulWidget {

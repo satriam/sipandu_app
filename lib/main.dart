@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:hyper_ui/core.dart';
-// import 'package:web_socket_channel/io.dart';
-import 'dependency_injection.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:SiPandu/core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,21 +9,21 @@ void main() async {
   DependencyInjection.init();
 }
 
-Future<void> requestPermission() async {
-  for (var permission in [
-    Permission.photos,
-    Permission.camera,
-    Permission.location
-  ]) {
-    var status = await permission.request();
-    if (status.isGranted) {
-      //isGranted!
-      print("granted");
-    } else if (status.isPermanentlyDenied) {
-      openAppSettings();
-    }
-  }
-}
+// Future<void> requestPermission() async {
+//   for (var permission in [
+//     Permission.photos,
+//     Permission.camera,
+//     Permission.location
+//   ]) {
+//     var status = await permission.request();
+//     if (status.isGranted) {
+//       //isGranted!
+//       print("granted");
+//     } else if (status.isPermanentlyDenied) {
+//       openAppSettings();
+//     }
+//   }
+// }
 
 class MainApp extends StatelessWidget {
   // final permissionPhotos = Permission.photos;
@@ -38,7 +35,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    requestPermission();
+    // requestPermission();
 
     return MaterialApp(
       navigatorKey: Get.navigatorKey,

@@ -1,5 +1,5 @@
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:hyper_ui/core.dart';
+import 'package:SiPandu/core.dart';
 import 'package:flutter/material.dart';
 
 Future showInfoDialog(String message) async {

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:hyper_ui/testting_something/printer_bluetooth/models/product_response_model.dart';
+import 'package:SiPandu/core.dart';
 
 class ProductQuantity {
   final Product product;

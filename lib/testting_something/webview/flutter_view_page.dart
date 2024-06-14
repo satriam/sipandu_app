@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hyper_ui/testting_something/webview/web_view_page.dart';
+import 'package:SiPandu/core.dart';
 
 class FlutterViewPage extends StatelessWidget {
   const FlutterViewPage({super.key});

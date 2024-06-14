@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:hyper_ui/core.dart';
-import '../view/dumping_view.dart';
+import 'package:SiPandu/core.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DumpingController extends State<DumpingView> {
   static late DumpingController instance;
   late DumpingView view;
+  bool isLoading = true;
+  int? userId;
+  String? nama;
+  String? role;
+  List Dumping = [];
 
   @override
   void initState() {
     instance = this;
     getProfile();
-    getlocation();
+    getNama();
     super.initState();
   }
 
@@ -21,35 +27,35 @@ class DumpingController extends State<DumpingView> {
   @override
   Widget build(BuildContext context) => widget.build(context, this);
 
-  List Dumping = [];
-
-  getProfile() async {
-    Dumping = await DumpingService().get();
-
-    setState(() {});
+  Future<void> getNama() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    nama = prefs.getString('nama');
+    role = prefs.getString('role');
+    userId = prefs.getInt('id_user');
+    // print(nama);
+    await getProfile();
   }
 
-  getlocation() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
+  Future<void> getProfile() async {
+    setState(() {
+      isLoading = true; // Menampilkan efek shimmer
+    });
+    // await Future.delayed(Duration(seconds: 2));
+    var allData = await DumpingService().get();
+    // Loading = await LoadingService().get();
 
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
+    setState(() {
+      if (role == "Supervisor") {
+        Dumping = allData.where((item) {
+          return item['attributes']['nama_supervisor'] == nama;
+        }).toList();
+      } else {
+        Dumping = allData.where((item) {
+          return item['attributes']['id_user'] == userId;
+        }).toList();
+        // Menghentikan efek shimmer
       }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    Position position = await Geolocator.getCurrentPosition();
-
-    print(position);
+      isLoading = false;
+    });
   }
 }

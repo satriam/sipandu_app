@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:hyper_ui/testting_something/ui/dimens.dart';
-import 'package:hyper_ui/testting_something/ui/textstyel.dart';
+import 'package:SiPandu/core.dart';
 
 class TestPage extends StatelessWidget {
   const TestPage({super.key});

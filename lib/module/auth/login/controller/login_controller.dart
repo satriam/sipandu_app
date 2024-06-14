@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hyper_ui/core.dart';
-import 'package:hyper_ui/module/auth/login/service/login_service.dart';
+import 'package:SiPandu/core.dart';
 // import 'package:hyper_ui/module/dashboard/view/main_navigation_view.dart'; // Import your MainNavigationView
 import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
-import 'package:hyper_ui/shared/util/url_api/url_api.dart';
-import '../view/login_view.dart';
 
 class LoginController extends State<LoginView> {
   static late LoginController instance;
@@ -52,7 +49,7 @@ class LoginController extends State<LoginView> {
     );
 
     hideLoading();
-    print(result.code);
+    // print(result.code);
     if (result.success) {
       final snackbar = SnackBar(content: Text('Sukses Login'));
       ScaffoldMessenger.of(context).showSnackBar(snackbar);
@@ -60,7 +57,9 @@ class LoginController extends State<LoginView> {
       // Save token to shared preferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('token', ApiUrl.token ?? "");
-
+      prefs.setString('role', ApiUrl.role_job ?? "");
+      prefs.setInt('id_user', ApiUrl.id);
+      prefs.setString('nama', ApiUrl.name ?? "");
       Get.offAll(MainNavigationView());
     } else {
       // Check if the error message indicates invalid identifier or password

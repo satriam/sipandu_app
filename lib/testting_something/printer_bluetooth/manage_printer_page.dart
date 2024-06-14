@@ -1,12 +1,7 @@
-import 'package:esc_pos_utils_plus/esc_pos_utils.dart';
+import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hyper_ui/extensions/build_context_ext.dart';
-import 'package:hyper_ui/testting_something/printer_bluetooth/menu_printer_button.dart';
-import 'package:hyper_ui/testting_something/printer_bluetooth/menu_printer_content.dart';
-import 'package:hyper_ui/testting_something/printer_bluetooth/models/product_quantity.dart';
-import 'package:hyper_ui/testting_something/printer_bluetooth/models/product_response_model.dart';
-import 'package:hyper_ui/testting_something/printer_bluetooth/print_dataoutputs.dart';
+import 'package:SiPandu/core.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 
 class ManagePrinterPage extends StatefulWidget {

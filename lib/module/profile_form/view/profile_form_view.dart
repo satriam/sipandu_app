@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../controller/profile_form_controller.dart';
-import 'package:hyper_ui/core.dart';
+import 'package:SiPandu/core.dart';
 import 'package:get/get.dart';
 
 class ProfileFormView extends StatelessWidget {

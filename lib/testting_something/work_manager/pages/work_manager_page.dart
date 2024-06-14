@@ -1,9 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:hyper_ui/core.dart';
-import 'package:hyper_ui/testting_something/work_manager/service/location_service.dart';
-import 'package:hyper_ui/testting_something/work_manager/service/work_manager_service.dart';
+import 'package:SiPandu/core.dart';
 
 class WorkManagerPage extends StatefulWidget {
   const WorkManagerPage({Key? key}) : super(key: key);

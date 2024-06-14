@@ -4,7 +4,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:hyper_ui/testting_something/work_manager/service/work_manager_service.dart';
+import 'package:SiPandu/core.dart';
 import 'package:path_provider/path_provider.dart';
 
 @pragma('vm:entry-point')

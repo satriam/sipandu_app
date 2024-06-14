@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hyper_ui/service/service_profile/profile_service.dart';
-import '../view/dashboard_view.dart';
+import 'package:SiPandu/core.dart';
 
 class DashboardController extends State<DashboardView> {
   static late DashboardController instance;

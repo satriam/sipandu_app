@@ -20,7 +20,7 @@ class BlogRow extends StatelessWidget {
         children: [
           Expanded(
             flex: 1,
-            child: coverURL != null
+            child: coverURL != true
                 ? Image.network(coverURL)
                 : const FlutterLogo(),
           ),

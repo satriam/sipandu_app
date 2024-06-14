@@ -38,6 +38,7 @@ class QTextField extends StatefulWidget {
 
 class _QTextFieldState extends State<QTextField> {
   TextEditingController textEditingController = TextEditingController();
+  bool _isValid = true;
 
   @override
   void initState() {
@@ -63,6 +64,12 @@ class _QTextFieldState extends State<QTextField> {
 
   FocusNode focusNode = FocusNode();
 
+  void _validateInput(String value) {
+    setState(() {
+      _isValid = widget.validator?.call(value) == null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -83,11 +90,14 @@ class _QTextFieldState extends State<QTextField> {
           ),
           helperText: widget.helper,
           hintText: widget.hint,
+          errorText: _isValid ? null : 'This field is required',
         ),
         onChanged: (value) {
+          _validateInput(value);
           widget.onChanged(value);
         },
         onFieldSubmitted: (value) {
+          _validateInput(value);
           if (widget.onSubmitted != null) widget.onSubmitted!(value);
         },
       ),

@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hyper_ui/core.dart';
-import 'package:hyper_ui/service/service_dumping/dumping_service.dart';
-import 'package:hyper_ui/service/service_hauling/hauling_service.dart';
-import 'package:hyper_ui/service/service_loading/loading_service.dart';
-import '../view/profile_view.dart';
+import 'package:SiPandu/core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:hyper_ui/service/service_profile/profile_service.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class ProfileController extends State<ProfileView> {
   static late ProfileController instance;
   late ProfileView view;
+  int? userId;
+  String version = '';
 
   @override
   void initState() {
@@ -17,6 +15,9 @@ class ProfileController extends State<ProfileView> {
     getProfile();
     getLoading();
     getDumping();
+    getNama();
+    _initPackageInfo();
+
     super.initState();
   }
 
@@ -79,21 +80,46 @@ class ProfileController extends State<ProfileView> {
     }
   }
 
+  Future<void> getNama() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = prefs.getInt('id_user');
+  }
+
   List<dynamic> loading = [];
+
   getLoading() async {
     loading = await LoadingService().get();
-    setState(() {});
+    setState(() {
+      loading = loading.where((item) {
+        return item['attributes']['id_user'] == userId;
+      }).toList();
+    });
   }
 
   List<dynamic> hauling = [];
   getHauling() async {
     hauling = await HaulingService().get();
-    setState(() {});
+    setState(() {
+      hauling = hauling.where((item) {
+        return item['attributes']['id_user'] == userId;
+      }).toList();
+    });
   }
 
   List<dynamic> dumping = [];
   getDumping() async {
     dumping = await DumpingService().get();
-    setState(() {});
+    setState(() {
+      dumping = dumping.where((item) {
+        return item['attributes']['id_user'] == userId;
+      }).toList();
+    });
+  }
+
+  Future<void> _initPackageInfo() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      version = info.version;
+    });
   }
 }

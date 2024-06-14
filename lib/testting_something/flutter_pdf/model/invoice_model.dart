@@ -1,5 +1,4 @@
-import 'package:hyper_ui/testting_something/flutter_pdf/model/customer_model.dart';
-import 'package:hyper_ui/testting_something/flutter_pdf/model/supplier_model.dart';
+import 'package:SiPandu/core.dart';
 
 class InvoiceModel {
   final InvoiceInfoModel info;

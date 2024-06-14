@@ -1,7 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getx;
-import 'package:hyper_ui/core.dart';
+import 'package:SiPandu/core.dart';
 
 class NetworkController extends getx.GetxController {
   final Connectivity _connectivity = Connectivity();

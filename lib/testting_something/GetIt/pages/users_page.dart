@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hyper_ui/testting_something/GetIt/service/user_service.dart';
+import 'package:SiPandu/core.dart';
 
 class UsersPageGetIt extends StatefulWidget {
   const UsersPageGetIt({super.key});

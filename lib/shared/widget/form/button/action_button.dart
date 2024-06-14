@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hyper_ui/core.dart';
+import 'package:SiPandu/core.dart';
 
 class QActionButton extends StatelessWidget {
   final String label;

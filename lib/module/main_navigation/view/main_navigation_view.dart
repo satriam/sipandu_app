@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hyper_ui/core.dart';
+import 'package:SiPandu/core.dart';
+import 'package:lottie/lottie.dart';
 
 class MainNavigationView extends StatefulWidget {
   MainNavigationView({Key? key}) : super(key: key);
@@ -8,12 +9,16 @@ class MainNavigationView extends StatefulWidget {
     controller.view = this;
 
     return DefaultTabController(
-      length: 2,
+      length: 3,
       initialIndex: controller.selectedIndex,
       child: Scaffold(
         body: IndexedStack(
           index: controller.selectedIndex,
-          children: [DashboardView(), ProfileView()],
+          children: [
+            DashboardView(),
+            NewsView(),
+            ProfileView(),
+          ],
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: controller.selectedIndex,
@@ -22,21 +27,27 @@ class MainNavigationView extends StatefulWidget {
             if (newIndex == 1) {
               // Memastikan bahwa pemanggilan hanya terjadi ketika indeks adalah 1 (indeks item profil)
               ProfileController.instance.getProfile();
-              ProfileController.instance.getLoading();
-              ProfileController.instance.getHauling();
-              ProfileController.instance.getDumping();
+              // ProfileController.instance.getLoading();
+              // ProfileController.instance.getHauling();
+              // ProfileController.instance.getDumping();
             }
           },
           items: [
             BottomNavigationBarItem(
               icon: Icon(
-                MdiIcons.viewDashboard,
+                MdiIcons.home,
               ),
-              label: "Dashboard",
+              label: "Home",
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                MdiIcons.table,
+                MdiIcons.message,
+              ),
+              label: "News",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                MdiIcons.faceMan,
               ),
               label: "Profile",
             ),

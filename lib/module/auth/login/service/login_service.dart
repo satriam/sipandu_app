@@ -1,5 +1,4 @@
-import 'package:dio/dio.dart';
-import 'package:hyper_ui/shared/util/url_api/url_api.dart';
+import 'package:SiPandu/core.dart';
 
 class LoginResult {
   final bool success;
@@ -33,7 +32,13 @@ class LoginService {
       Map obj = response.data;
       print(obj);
       String? token = obj["jwt"];
-      ApiUrl.token = token; // Simpan token ke dalam variabel ApiUrl
+      String? role_job = obj['user']['Role_job'];
+      String? nama = obj['user']['Nama'];
+      int id = obj['user']['id'];
+      ApiUrl.token = token;
+      ApiUrl.role_job = role_job; // Simpan token ke dalam variabel ApiUrl
+      ApiUrl.id = id; // Simpan token ke dalam variabel ApiUrl
+      ApiUrl.name = nama; // Simpan token ke dalam variabel ApiUrl
       return LoginResult(success: true);
     } on DioError catch (e) {
       if (e.response != null && e.response!.statusCode == 500) {

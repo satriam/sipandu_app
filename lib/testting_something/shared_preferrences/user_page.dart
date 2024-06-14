@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hyper_ui/core.dart';
-import 'package:hyper_ui/testting_something/shared_preferrences/local/app_local.dart';
-import 'package:hyper_ui/testting_something/shared_preferrences/local/user_local.dart';
-import 'package:hyper_ui/testting_something/shared_preferrences/model/user_response_model.dart';
-import 'package:hyper_ui/testting_something/shared_preferrences/shared_preferences_page.dart';
+import 'package:SiPandu/core.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});

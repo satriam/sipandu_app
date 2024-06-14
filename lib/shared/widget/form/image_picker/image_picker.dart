@@ -1,9 +1,12 @@
 import 'dart:io';
-import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
+import 'package:SiPandu/core.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 
 class QImagePicker extends StatefulWidget {
   final String label;
@@ -35,6 +38,7 @@ class _QImagePickerState extends State<QImagePicker> {
   String? imageUrl;
   bool loading = false;
   late TextEditingController controller;
+
   @override
   void initState() {
     imageUrl = widget.value;
@@ -60,11 +64,49 @@ class _QImagePickerState extends State<QImagePicker> {
   Future<String?> getFileAndroidIosAndWeb() async {
     XFile? image = await ImagePicker().pickImage(
       source: ImageSource.gallery,
-      imageQuality: 40,
+      maxHeight: 1080,
+      maxWidth: 1920,
     );
     String? filePath = image?.path;
     if (filePath == null) return null;
+
+    // Perbaiki orientasi gambar
+    if (Platform.isAndroid || Platform.isIOS) {
+      File rotatedFile =
+          await FlutterExifRotation.rotateAndSaveImage(path: filePath);
+      filePath = rotatedFile.path;
+    }
+
     return filePath;
+  }
+
+  Future<String?> uploadFile(String filePath) async {
+    return await uploadToAPI(filePath);
+  }
+
+  Future<String> uploadToAPI(String filePath) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+    final formData = FormData.fromMap({
+      'files': await MultipartFile.fromFile(filePath),
+    });
+
+    var res = await Dio().post(
+      '${ApiUrl.baseUrl}/api/upload',
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      ),
+      data: formData,
+    );
+
+    var data = res.data;
+    var realurl = data[0]["url"];
+    var url = '${ApiUrl.baseUrl}$realurl';
+
+    widget.onChanged(url);
+    return url;
   }
 
   browsePhoto() async {
@@ -80,12 +122,12 @@ class _QImagePickerState extends State<QImagePicker> {
       filePath = await getFileAndroidIosAndWeb();
     }
     if (filePath == null) return;
-    // print(filePath);
-    // imageUrl = await uploadFile(filePath);
+
+    imageUrl = await uploadFile(filePath);
+
     loading = false;
 
-    if (filePath != null) {
-      imageUrl = filePath;
+    if (imageUrl != null) {
       widget.onChanged(imageUrl!);
       controller.text = imageUrl!;
     }
@@ -115,18 +157,21 @@ class _QImagePickerState extends State<QImagePicker> {
             ),
             decoration: BoxDecoration(
               color: loading ? Colors.blueGrey[900] : null,
-              borderRadius: BorderRadius.circular(10),
               image: loading
                   ? null
-                  : imageUrl != null && imageUrl!.isNotEmpty
-                      ? DecorationImage(
-                          image: FileImage(File(imageUrl!)),
-                          fit: BoxFit.cover,
-                        )
-                      : DecorationImage(
-                          image: AssetImage('assets/images/no-image.jpg'),
-                          fit: BoxFit.cover,
-                        ),
+                  : DecorationImage(
+                      image: NetworkImage(
+                        imageUrl == null
+                            ? "${ApiUrl.baseUrl}/uploads/thumbnail_no_image_251fa67e50.jpg"
+                            : imageUrl!,
+                      ),
+                      fit: BoxFit.cover,
+                    ),
+              borderRadius: BorderRadius.all(
+                Radius.circular(
+                  16.0,
+                ),
+              ),
             ),
             child: Visibility(
               visible: loading == true,

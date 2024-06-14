@@ -1,4 +1,4 @@
-import 'package:hyper_ui/core.dart';
+import 'package:SiPandu/core.dart';
 import 'package:flutter/material.dart';
 
 Future<bool> showConfirmationDialog() async {

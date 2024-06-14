@@ -51,7 +51,7 @@
     <string>photos</string>
 	 <!-- Permission options for the `camera` group -->
     <key>NSCameraUsageDescription</key>
-    <string>camera</string>
+    <string>$(PRODUCT_NAME) uses camera</string>
 		<!-- Permission options for the `location` group -->
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>Need location when in use</string>
@@ -61,5 +61,14 @@
     <string>Older devices need location.</string>
     <key>NSLocationAlwaysUsageDescription</key>
     <string>Can I have location always?</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>use bluetooth when in use</string>
+	<key>NSCameraUsageDescription</key>
+<string>We need access to the camera to take photos</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>We need access to your photo library to select photos</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>We need access to your location to provide location-based features</string>
+
 </dict>
 </plist>

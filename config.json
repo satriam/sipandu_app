@@ -3,7 +3,10 @@
         "features/loading",
         "features/hauling",
         "features/dumping",
-        "profile_form"
+        "profile_form",
+        "features/loading_detail",
+        "features/news",
+        "features/news_form"
     ],
     "module_directory_name": "module",
     "experimental_mode": false,

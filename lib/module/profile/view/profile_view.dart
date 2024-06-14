@@ -1,24 +1,15 @@
+import 'package:SiPandu/module/features/hauling/view/hauling_view.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:hyper_ui/core.dart';
-import '../controller/profile_controller.dart';
-import 'package:image_picker/image_picker.dart';
-
-Future<void> _pickImage(BuildContext context) async {
-  final picker = ImagePicker();
-  final pickedFile = await picker.pickImage(
-      source: ImageSource.gallery); // Corrected the dot operator here
-  // You can now use pickedFile to display the selected image or handle it further
-}
+import 'package:SiPandu/core.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({Key? key}) : super(key: key);
 
   Widget build(context, ProfileController controller) {
     controller.view = this;
-    String? thumbnailUrl =
-        controller.profile['profile_image']?['formats']?['thumbnail']?['url'];
-    String fullThumbnailUrl =
-        thumbnailUrl != null ? '${ApiUrl.baseUrl}$thumbnailUrl' : '';
+    String? thumbnailUrl = controller.profile['profile_image'] ?? "null";
+    String fullThumbnailUrl = thumbnailUrl != null ? '$thumbnailUrl' : '';
 
     return Scaffold(
       backgroundColor: Colors.grey[300],
@@ -120,6 +111,10 @@ class ProfileView extends StatefulWidget {
                   child: Row(
                     children: [
                       Expanded(
+                          child: InkWell(
+                        onTap: () async {
+                          await Get.to(HaulingView());
+                        },
                         child: Column(
                           children: [
                             Icon(Icons.add_road),
@@ -138,8 +133,12 @@ class ProfileView extends StatefulWidget {
                             ),
                           ],
                         ),
-                      ),
+                      )),
                       Expanded(
+                          child: InkWell(
+                        onTap: () async {
+                          await Get.to(LoadingView());
+                        },
                         child: Column(
                           children: [
                             Icon(Icons.local_shipping),
@@ -158,8 +157,12 @@ class ProfileView extends StatefulWidget {
                             ),
                           ],
                         ),
-                      ),
+                      )),
                       Expanded(
+                          child: InkWell(
+                        onTap: () async {
+                          await Get.to(DumpingView());
+                        },
                         child: Column(
                           children: [
                             Icon(Icons.post_add),
@@ -178,7 +181,7 @@ class ProfileView extends StatefulWidget {
                             ),
                           ],
                         ),
-                      ),
+                      )),
                     ],
                   ),
                 ),
@@ -238,27 +241,21 @@ class ProfileView extends StatefulWidget {
                       }
                     },
                     {
-                      "label": "TOS",
-                      "icon": Icons.warning,
+                      "label": "About",
+                      "icon": Icons.accessibility_new_outlined,
                       "on_tap": () {
-                        showDialog(
+                        return AwesomeDialog(
                           context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Fitur'),
-                              content: Text('Sedang Dalam Pengembangan!'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .pop(); // Close the dialog
-                                  },
-                                  child: Text('Close'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                          dialogType: DialogType.info,
+                          headerAnimationLoop: true,
+                          animType: AnimType.topSlide,
+                          title: 'SIPANDU',
+                          titleTextStyle: TextStyle(
+                            fontWeight: bold,
+                          ),
+                          desc: 'version ${controller.version}',
+                          btnOkOnPress: () => Get.back(),
+                        ).show();
                       }
                     }
                   ];

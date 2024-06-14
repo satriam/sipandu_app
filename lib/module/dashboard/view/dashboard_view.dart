@@ -1,7 +1,6 @@
 import 'package:custom_clippers/custom_clippers.dart';
 import 'package:flutter/material.dart';
-import 'package:hyper_ui/core.dart';
-import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:SiPandu/core.dart';
 
 class DashboardView extends StatefulWidget {
   DashboardView({Key? key}) : super(key: key);
@@ -99,7 +98,7 @@ class DashboardView extends StatefulWidget {
               physics: const ClampingScrollPhysics(),
               children: [
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       "${controller.profile['Nama']}",
@@ -109,9 +108,16 @@ class DashboardView extends StatefulWidget {
                         fontSize: 26,
                       ),
                     ),
+                    Text(
+                      "${controller.profile['Jabatan']}",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                      ),
+                    ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 3),
                 Row(
                   children: [
                     Text(
@@ -135,10 +141,11 @@ class DashboardView extends StatefulWidget {
                 ),
                 const SizedBox(height: 40),
                 Card(
+                  surfaceTintColor: Color.fromARGB(25, 255, 255, 255),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0),
                   ),
-                  elevation: 2,
+                  elevation: 5,
                   child: Container(
                     padding: const EdgeInsets.all(16.0),
                     width: double.infinity,
@@ -154,15 +161,14 @@ class DashboardView extends StatefulWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => LoadingView()));
-                            print('pindah');
                           },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image.asset(
-                                'assets/icon/apple-logo.png', // Provide the correct asset path
-                                height: 30,
-                                width: 30,
+                                'assets/icon/dumping.png', // Provide the correct asset path
+                                height: 40,
+                                width: 90,
                               ),
                               const SizedBox(height: 5),
                               const Text(
@@ -183,9 +189,9 @@ class DashboardView extends StatefulWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image.asset(
-                                'assets/icon/apple-logo.png', // Provide the correct asset path
-                                height: 30,
-                                width: 30,
+                                'assets/icon/dumping.png', // Provide the correct asset path
+                                height: 40,
+                                width: 90,
                               ),
                               const SizedBox(height: 5),
                               const Text(
@@ -206,9 +212,9 @@ class DashboardView extends StatefulWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image.asset(
-                                'assets/icon/apple-logo.png', // Provide the correct asset path
-                                height: 30,
-                                width: 30,
+                                'assets/icon/dumping.png', // Provide the correct asset path
+                                height: 40,
+                                width: 90,
                               ),
                               const SizedBox(height: 5),
                               const Text(

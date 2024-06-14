@@ -1,4 +1,7 @@
 class ApiUrl {
-  static String baseUrl = "http://localhost:1337";
+  static String baseUrl = "http://sipandu-api.rehandling.my.id";
   static String? token;
+  static String? role_job;
+  static int id = 0;
+  static String? name;
 }

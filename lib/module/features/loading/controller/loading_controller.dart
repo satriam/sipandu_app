@@ -1,35 +1,62 @@
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:SiPandu/core.dart';
 import 'package:get/get.dart';
-import 'package:hyper_ui/core.dart';
-import '../view/loading_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class LoadingController extends GetxController {
-  LoadingView? view;
+class LoadingController extends State<LoadingView> {
+  static late LoadingController instance;
+  late LoadingView view;
+  bool isLoading = true;
+  int? userId;
+  String? nama;
+  String? role;
 
   @override
-  void onInit() {
-    super.onInit();
+  void initState() {
+    instance = this;
+    getProfile();
+    getNama();
+    super.initState();
   }
 
   @override
-  void onReady() {
-    super.onReady();
-  }
+  void dispose() => super.dispose();
 
   @override
-  void onClose() {
-    super.onClose();
+  Widget build(BuildContext context) => widget.build(context, this);
+
+  Future<void> getNama() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    nama = prefs.getString('nama');
+    role = prefs.getString('role');
+    userId = prefs.getInt('id_user');
+    // print(nama);
+    // await getProfile();
   }
 
-  Map<String, dynamic> profile = {}; // Change the type to Map<String, dynamic>
+  List Loading = [];
 
-  getProfile() async {
-    dynamic profileData = await ProfileService()
-        .get(); // Assuming ProfileService().get() returns dynamic
-    if (profileData is Map<String, dynamic>) {
-      profile = profileData;
-    } else {
-      // Handle the case where profileData is not in the expected format
-      print("Profile data is not in the expected format.");
-    }
+  Future<void> getProfile() async {
+    setState(() {
+      isLoading = true; // Menampilkan efek shimmer
+    });
+    // await Future.delayed(Duration(seconds: 10));
+    var allData = await LoadingService().get();
+    // Loading = await LoadingService().get();
+
+    setState(() {
+      if (role == "Supervisor") {
+        Loading = allData.where((item) {
+          return item['attributes']['nama_supervisor'] == nama;
+        }).toList();
+      } else {
+        Loading = allData.where((item) {
+          return item['attributes']['id_user'] == userId;
+        }).toList();
+        // Menghentikan efek shimmer
+      }
+      isLoading = false;
+    });
   }
 }

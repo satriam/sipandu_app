@@ -1,12 +1,7 @@
 import 'dart:io';
-import 'dart:developer';
 
 import 'package:flutter/services.dart';
-import 'package:hyper_ui/testting_something/flutter_pdf/model/customer_model.dart';
-import 'package:hyper_ui/testting_something/flutter_pdf/model/invoice_model.dart';
-import 'package:hyper_ui/testting_something/flutter_pdf/model/supplier_model.dart';
-import 'package:hyper_ui/testting_something/flutter_pdf/service/helper_pdf_service.dart';
-import 'package:hyper_ui/testting_something/flutter_pdf/utils.dart';
+import 'package:SiPandu/core.dart';
 import 'package:pdf/widgets.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;

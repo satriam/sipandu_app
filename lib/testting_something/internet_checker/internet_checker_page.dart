@@ -2,9 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:hyper_ui/testting_something/internet_checker/internet_connection_service.dart';
-import 'package:hyper_ui/testting_something/internet_checker/offline_page.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:SiPandu/core.dart';
 
 class InternetCheckerPage extends StatefulWidget {
   const InternetCheckerPage({super.key});

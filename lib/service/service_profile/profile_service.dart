@@ -1,5 +1,4 @@
-import 'package:dio/dio.dart';
-import 'package:hyper_ui/core.dart';
+import 'package:SiPandu/core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileService {

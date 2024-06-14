@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:hyper_ui/testting_something/flutter-graphql/blog_page.dart';
-import 'package:hyper_ui/testting_something/flutter-graphql/service/blog_service.dart';
+import 'package:SiPandu/core.dart';
 
 class FlutterGraphqlPage extends StatelessWidget {
   const FlutterGraphqlPage({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hyper_ui/core.dart';
+import 'package:SiPandu/core.dart';
 import '../controller/favorite_controller.dart';
 
 class FavoriteView extends StatefulWidget {
