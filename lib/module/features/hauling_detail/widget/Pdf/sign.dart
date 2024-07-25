@@ -13,10 +13,11 @@ Future<Uint8List> _fetchImage(String imageUrl) async {
 }
 
 Future<pw.Widget> buildSignHauling(Map<String, dynamic> data) async {
-  final imageUrl = data['attributes']?['qr_1'] ?? "";
-  final imageUrl2 = data['attributes']?['qr_2'] ?? "";
-  final imageUrl3 = data['attributes']?['qr_3'] ??
-      "${ApiUrl.baseUrl}/uploads/thumbnail_no_image_251fa67e50.jpg";
+  var link =
+      "https://sipandu-api.rehandling.my.id/uploads/no_image_b1d966e1bd.jpg";
+  final imageUrl = data['attributes']?['qr_1'] ?? "$link";
+  final imageUrl2 = data['attributes']?['qr_2'] ?? "$link";
+  final imageUrl3 = data['attributes']?['qr_3'] ?? "$link";
   final imageBytes = await _fetchImage(imageUrl);
   final imageBytes2 = await _fetchImage(imageUrl2);
   final imageBytes3 = await _fetchImage(imageUrl3);

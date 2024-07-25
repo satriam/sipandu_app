@@ -21,20 +21,17 @@ class location_hauling {
       "value": "Jalan Bangau",
     },
     {
+      "label": "Jalan Fob Mv",
+      "value": "Jalan Fob Mv",
+    },
+    {
       "label": "Jalan Real Betis",
       "value": "Jalan Real Betis",
     },
   ];
 }
 
-class Location_item_dumping {
-  static const List<Map<String, String>> items = [
-    {
-      "label": "SP ROM 5",
-      "value": "SP ROM 5",
-    },
-  ];
-}
+
 
 class Location_item {
   static const List<Map<String, String>> items = [
@@ -72,7 +69,7 @@ class Location_item {
     },
     {
       "label": "Stock Cardiff",
-      "value": "Stock Carfiff",
+      "value": "Stock Cardiff",
     },
     {
       "label": "Stock CCP",
@@ -338,19 +335,19 @@ class KodeBahaya {
   static const List<Map<String, String>> items = [
     {
       "label": "Critical",
-      "value": "Critical",
+      "value": "C",
     },
     {
       "label": "High",
-      "value": "High",
+      "value": "H",
     },
     {
       "label": "Medium",
-      "value": "Medium",
+      "value": "M",
     },
     {
       "label": "Lower",
-      "value": "Lower",
+      "value": "L",
     },
   ];
 }
@@ -358,6 +355,47 @@ class KodeBahaya {
 class KondisiAktual {
   static const List<Map<String, dynamic>> items = [
     {"label": "Aman", "value": "Aman"},
-    {"label": "Tidak Aman", "value": "Aman"}
+    {"label": "Tidak Aman", "value": "Tidak Aman"}
+  ];
+}
+
+class PengawasRehandling {
+  static const List<Map<String, String>> items = [
+    {
+      "label": "Dika Pratama",
+      "value": "Dika Pratama",
+    },
+    {
+      "label": "M Pandu Pratama",
+      "value": "M Pandu Pratama",
+    },
+    {
+      "label": "Ucen",
+      "value": "Ucen",
+    },
+    {
+      "label": "Tri Alfayed",
+      "value": "Tri Alfayed",
+    },
+    {
+      "label": "Suratman",
+      "value": "Suratman",
+    },
+    {
+      "label": "Jakantara",
+      "value": "Jakantara",
+    },
+    {
+      "label": "Afif Hidayah",
+      "value": "Afif Hidayah",
+    },
+    {
+      "label": "Novriadi Rizki",
+      "value": "Novriadi Rizki",
+    },
+    {
+      "label": "Rahmat Hidayatullah",
+      "value": "Rahmat Hidayatullah",
+    },
   ];
 }

@@ -1,10 +1,9 @@
 import 'package:SiPandu/core.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:pdf/pdf.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 Future<pw.Widget> builContent(Map<String, dynamic> data) async {
-  final logo = pw.MemoryImage(
+  pw.MemoryImage(
     (await rootBundle.load('assets/images/logo-ptba.png')).buffer.asUint8List(),
   );
 

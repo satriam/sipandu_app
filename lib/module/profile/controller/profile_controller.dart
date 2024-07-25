@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:SiPandu/core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,9 +13,7 @@ class ProfileController extends State<ProfileView> {
   @override
   void initState() {
     instance = this;
-    getProfile();
-    getLoading();
-    getDumping();
+    RefreshTokenService().refreshToken();
     getNama();
     _initPackageInfo();
 
@@ -28,55 +27,43 @@ class ProfileController extends State<ProfileView> {
   Widget build(BuildContext context) => widget.build(context, this);
 
   Future<void> doLogout(BuildContext context) async {
-    showDialog(
+    AwesomeDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Konfirmasi Logout'),
-          content: Text('Apakah Anda yakin ingin logout?'),
-          actions: <Widget>[
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueGrey,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Batal"),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueGrey,
-              ),
-              onPressed: () async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                await prefs.remove('token');
+      dialogType: DialogType.question,
+      headerAnimationLoop: true,
+      animType: AnimType.topSlide,
+      title: 'Konfirmasi Logout',
+      desc: 'Apakah Anda Yakin Ingin Logout?',
+      btnOkOnPress: () async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.remove('token');
+        await prefs.remove('role');
 
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginView()),
-                  (Route<dynamic> route) => false,
-                );
-              },
-              child: const Text("Logout"),
-            ),
-          ],
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => LoginView()),
+          (Route<dynamic> route) => false,
         );
       },
-    );
+      btnCancelOnPress: () {},
+    ).show();
   }
 
   Map<String, dynamic> profile = {}; // Change the type to Map<String, dynamic>
 
   getProfile() async {
-    dynamic profileData = await ProfileService()
-        .get(); // Assuming ProfileService().get() returns dynamic
-    if (profileData is Map<String, dynamic>) {
-      profile = profileData;
-      setState(() {});
-    } else {
-      // Handle the case where profileData is not in the expected format
-      print("Profile data is not in the expected format.");
+    try {
+      dynamic profileData = await ProfileService()
+          .get(); // Assuming ProfileService().get() returns dynamic
+      if (profileData is Map<String, dynamic>) {
+        profile = profileData;
+        setState(() {});
+      } else {
+        // Handle the case where profileData is not in the expected format
+        print("Profile data is not in the expected format.");
+      }
+    } catch (e) {
+      return;
     }
   }
 
@@ -88,32 +75,44 @@ class ProfileController extends State<ProfileView> {
   List<dynamic> loading = [];
 
   getLoading() async {
-    loading = await LoadingService().get();
-    setState(() {
-      loading = loading.where((item) {
-        return item['attributes']['id_user'] == userId;
-      }).toList();
-    });
+    try {
+      loading = await LoadingService().get();
+      setState(() {
+        loading = loading.where((item) {
+          return item['attributes']['id_user'] == userId;
+        }).toList();
+      });
+    } catch (e) {
+      return;
+    }
   }
 
   List<dynamic> hauling = [];
   getHauling() async {
-    hauling = await HaulingService().get();
-    setState(() {
-      hauling = hauling.where((item) {
-        return item['attributes']['id_user'] == userId;
-      }).toList();
-    });
+    try {
+      hauling = await HaulingService().get();
+      setState(() {
+        hauling = hauling.where((item) {
+          return item['attributes']['id_user'] == userId;
+        }).toList();
+      });
+    } catch (e) {
+      return;
+    }
   }
 
   List<dynamic> dumping = [];
   getDumping() async {
-    dumping = await DumpingService().get();
-    setState(() {
-      dumping = dumping.where((item) {
-        return item['attributes']['id_user'] == userId;
-      }).toList();
-    });
+    try {
+      dumping = await DumpingService().get();
+      setState(() {
+        dumping = dumping.where((item) {
+          return item['attributes']['id_user'] == userId;
+        }).toList();
+      });
+    } catch (e) {
+      return;
+    }
   }
 
   Future<void> _initPackageInfo() async {

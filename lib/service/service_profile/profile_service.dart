@@ -2,20 +2,33 @@ import 'package:SiPandu/core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileService {
-  get() async {
+  Future<Map<String, String>> _getHeaders() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
-    var response = await Dio().get(
-      "${ApiUrl.baseUrl}/api/users/me?populate=*",
-      options: Options(
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer ${token}"
-        },
-      ),
-    );
-    Map obj = response.data;
-    // print(obj);
-    return obj;
+    return {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token"
+    };
+  }
+
+  Future<dynamic> get() async {
+    try {
+      var headers = await _getHeaders();
+      var response = await Dio().get(
+        "${ApiUrl.baseUrl}/api/users/me",
+        options: Options(headers: headers),
+      );
+
+      if (response.statusCode == 200) {
+        // print(response.data);
+        return response.data;
+      } else {
+        print("Error: ${response.statusCode}");
+        return null;
+      }
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
   }
 }

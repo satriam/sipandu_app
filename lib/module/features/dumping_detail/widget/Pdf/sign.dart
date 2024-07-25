@@ -2,8 +2,6 @@ import 'dart:typed_data';
 import 'package:SiPandu/core.dart';
 import 'package:http/http.dart' as http;
 import 'package:pdf/widgets.dart' as pw;
-import 'package:pdf/pdf.dart';
-import 'package:flutter/services.dart' show rootBundle;
 
 Future<Uint8List> _fetchImage(String imageUrl) async {
   final response = await http.get(Uri.parse(imageUrl));
@@ -15,25 +13,17 @@ Future<Uint8List> _fetchImage(String imageUrl) async {
 }
 
 Future<pw.Widget> buildSign(Map<String, dynamic> data) async {
-  final logo = pw.MemoryImage(
-    (await rootBundle.load('assets/images/logo-ptba.png')).buffer.asUint8List(),
-  );
-  final imageUrl = data['attributes']?['qr_1'] ?? "";
-  final imageUrl2 = data['attributes']?['qr_2'] ?? "";
-  final imageUrl3 = data['attributes']?['qr_3'] ??
-      "${ApiUrl.baseUrl}/uploads/thumbnail_no_image_251fa67e50.jpg";
-  final imageUrl4 = data['attributes']?['evident_1'] ?? "";
-  final imageUrl5 = data['attributes']?['evident_2'] ?? "";
+  var link =
+      "https://sipandu-api.rehandling.my.id/uploads/no_image_b1d966e1bd.jpg";
+  final imageUrl = data['attributes']?['qr_1'] ?? "$link";
+  final imageUrl2 = data['attributes']?['qr_2'] ?? "$link";
+  final imageUrl3 = data['attributes']?['qr_3'] ?? "$link";
   final imageBytes = await _fetchImage(imageUrl);
   final imageBytes2 = await _fetchImage(imageUrl2);
   final imageBytes3 = await _fetchImage(imageUrl3);
-  final imageBytes4 = await _fetchImage(imageUrl4);
-  final imageBytes5 = await _fetchImage(imageUrl5);
   final image = pw.MemoryImage(imageBytes);
   final image2 = pw.MemoryImage(imageBytes2);
   final image3 = pw.MemoryImage(imageBytes3);
-  final image4 = pw.MemoryImage(imageBytes4);
-  final image5 = pw.MemoryImage(imageBytes5);
   return pw.Table(
     border: pw.TableBorder.all(),
     columnWidths: {

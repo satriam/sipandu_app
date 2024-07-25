@@ -2,8 +2,6 @@ import 'dart:typed_data';
 import 'package:SiPandu/core.dart';
 import 'package:http/http.dart' as http;
 import 'package:pdf/widgets.dart' as pw;
-import 'package:pdf/pdf.dart';
-import 'package:flutter/services.dart' show rootBundle;
 
 Future<Uint8List> _fetchImage(String imageUrl) async {
   final response = await http.get(Uri.parse(imageUrl));
@@ -15,8 +13,10 @@ Future<Uint8List> _fetchImage(String imageUrl) async {
 }
 
 Future<pw.Widget> buildLampiranLoading(Map<String, dynamic> data) async {
-  final imageUrl4 = data['attributes']?['evident_1'] ?? "";
-  final imageUrl5 = data['attributes']?['evident_2'] ?? "";
+  var link =
+      "https://sipandu-api.rehandling.my.id/uploads/no_image_b1d966e1bd.jpg";
+  final imageUrl4 = data['attributes']?['evident_1'] ?? "$link";
+  final imageUrl5 = data['attributes']?['evident_2'] ?? "$link";
 
   final imageBytes4 = await _fetchImage(imageUrl4);
   final imageBytes5 = await _fetchImage(imageUrl5);

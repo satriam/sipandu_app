@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:workmanager/workmanager.dart';
 
 @pragma(
@@ -30,7 +29,6 @@ void callbackDispatcher() {
         },
       );
       log("Running: ${response.statusCode}");
-      Map obj = response.data;
     } on Exception catch (err) {
       log(err.toString());
     }

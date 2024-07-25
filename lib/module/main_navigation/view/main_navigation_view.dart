@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:SiPandu/core.dart';
-import 'package:lottie/lottie.dart';
 
 class MainNavigationView extends StatefulWidget {
   MainNavigationView({Key? key}) : super(key: key);
@@ -16,7 +15,7 @@ class MainNavigationView extends StatefulWidget {
           index: controller.selectedIndex,
           children: [
             DashboardView(),
-            NewsView(),
+            // NewsView(),
             ProfileView(),
           ],
         ),
@@ -24,12 +23,17 @@ class MainNavigationView extends StatefulWidget {
           currentIndex: controller.selectedIndex,
           onTap: (newIndex) {
             controller.updateIndex(newIndex);
-            if (newIndex == 1) {
-              // Memastikan bahwa pemanggilan hanya terjadi ketika indeks adalah 1 (indeks item profil)
+            if (newIndex == 0) {
+              RefreshTokenService().refreshToken();
+              NetworkController().checkTokenStatus();
               ProfileController.instance.getProfile();
-              // ProfileController.instance.getLoading();
-              // ProfileController.instance.getHauling();
-              // ProfileController.instance.getDumping();
+            } else if (newIndex == 1) {
+              RefreshTokenService().refreshToken();
+              NetworkController().checkTokenStatus();
+              ProfileController.instance.getProfile();
+              ProfileController.instance.getLoading();
+              ProfileController.instance.getHauling();
+              ProfileController.instance.getDumping();
             }
           },
           items: [
@@ -39,12 +43,12 @@ class MainNavigationView extends StatefulWidget {
               ),
               label: "Home",
             ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                MdiIcons.message,
-              ),
-              label: "News",
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(
+            //     MdiIcons.message,
+            //   ),
+            //   label: "News",
+            // ),
             BottomNavigationBarItem(
               icon: Icon(
                 MdiIcons.faceMan,

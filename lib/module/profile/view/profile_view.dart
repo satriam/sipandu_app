@@ -1,4 +1,3 @@
-import 'package:SiPandu/module/features/hauling/view/hauling_view.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:SiPandu/core.dart';
@@ -83,7 +82,15 @@ class ProfileView extends StatefulWidget {
                   ),
                   InkWell(
                     onTap: () async {
-                      await Get.to(ProfileFormView());
+                      // await Get.to(ProfileFormView());
+                      return AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.info,
+                        headerAnimationLoop: true,
+                        animType: AnimType.topSlide,
+                        desc: 'Sedang Tahap Pengembangan',
+                        btnOkOnPress: () => Get.back(),
+                      ).show();
                     },
                     child: CircleAvatar(
                       radius: 16.0,
@@ -196,48 +203,28 @@ class ProfileView extends StatefulWidget {
                       "label": "Change Password",
                       "icon": Icons.password,
                       "on_tap": () {
-                        showDialog(
+                        return AwesomeDialog(
                           context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Fitur'),
-                              content: Text('Sedang Dalam Pengembangan!'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .pop(); // Close the dialog
-                                  },
-                                  child: Text('Close'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                          dialogType: DialogType.info,
+                          headerAnimationLoop: true,
+                          animType: AnimType.topSlide,
+                          desc: 'Sedang Tahap Pengembangan',
+                          btnOkOnPress: () => Get.back(),
+                        ).show();
                       }
                     },
                     {
                       "label": "Privacy Policy",
                       "icon": Icons.info,
                       "on_tap": () {
-                        showDialog(
+                        return AwesomeDialog(
                           context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Fitur'),
-                              content: Text('Sedang Dalam Pengembangan!'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .pop(); // Close the dialog
-                                  },
-                                  child: Text('Close'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                          dialogType: DialogType.info,
+                          headerAnimationLoop: true,
+                          animType: AnimType.topSlide,
+                          desc: 'Sedang Tahap Pengembangan',
+                          btnOkOnPress: () => Get.back(),
+                        ).show();
                       }
                     },
                     {

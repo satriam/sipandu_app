@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:SiPandu/core.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
@@ -7,26 +9,25 @@ class HaulingPostController extends State<HaulingPostView> {
   static late HaulingPostController instance;
   late HaulingPostView view;
 
+  String? role;
+  late StreamSubscription<Map<String, String>> _streamSubscription;
+
   @override
   void initState() {
     instance = this;
-    // if (isEditMode) {
-    //   grup = widget.item!["attributes"]["grup"];
-    //   shift = widget.item!["attributes"]["shift"];
-    //   lokasi = widget.item!["attributes"]["lokasi"];
-    //   lokasi_detail = widget.item!["attributes"]["nama_loading"];
-    //   nama_supervisor = widget.item!["attributes"]["nama_supervisor"];
-    //   nama_mitra = widget.item!["attributes"]["nama_pengawas_mitra"];
-    //   evident_1 = widget.item!["attributes"]["evident_1"];
-    //   evident_2 = widget.item!["attributes"]["evident_2"];
-    //   buttonEdit = "Update";
-    // }
-    getid();
+    RefreshTokenService().refreshToken();
+    // getid();
+    _streamSubscription =
+        ShiftSchedule().shiftStream.listen((data) => updateShiftData(data));
+    fetchData();
     super.initState();
   }
 
   @override
-  void dispose() => super.dispose();
+  void dispose() {
+    _streamSubscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) => widget.build(context, this);
@@ -36,6 +37,7 @@ class HaulingPostController extends State<HaulingPostView> {
   bool get isEditMode => widget.item != null;
   String? buttonEdit = "Save";
   String? grup;
+  String? grupNow;
   String? shift;
   String? lokasi;
   String? lokasi_detail;
@@ -102,16 +104,45 @@ class HaulingPostController extends State<HaulingPostView> {
   String? kode_28;
   String? kode_29;
   String? kode_30;
+  String? status = "Waiting Approval Inspector";
   String? evident_1;
   String? evident_2;
   String? ttd_pengawas_mitra;
   String? ttd_Pengawas_rh;
+  String? ttd_Supervisor;
   int? id_user;
 
-  getid() async {
+  void updateShiftData(Map<String, String> data) {
+    setState(() {
+      grupNow = data['activeGroup'];
+      shift = data['currentShift'];
+    });
+  }
+
+  Future<void> fetchData() async {
+    Map<String, dynamic> userData = await getid();
+    setState(() {
+      role = userData['role'];
+      id_user = userData['id_user'];
+      grup = userData['grup'];
+      nama = userData['nama'];
+    });
+  }
+
+  Future<Map<String, dynamic>> getid() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    id_user = prefs.getInt('id_user');
-    nama = prefs.getString('nama');
+
+    int? idUser = prefs.getInt('id_user');
+    String? nama = prefs.getString('nama');
+    String? role = prefs.getString('role');
+    String? grup = prefs.getString('grup');
+
+    return {
+      'id_user': idUser,
+      'nama': nama,
+      'role': role,
+      'grup': grup,
+    };
   }
 
   doSaveHauling() async {
@@ -120,39 +151,15 @@ class HaulingPostController extends State<HaulingPostView> {
       return;
     }
     try {
-      if (isEditMode) {
-        await HaulingService().put(
-            id: widget.item!["id"],
-            shift: shift!,
-            lokasi: lokasi!,
-            lokasi_detail: lokasi_detail!,
-            grup: grup!,
-            nama_supervisor: nama_supervisor!,
-            nama_pengawas: nama_mitra!,
-            evident_1: evident_1,
-            evident_2: evident_2,
-            qr_1: ttd_pengawas_mitra,
-            qr_2: ttd_Pengawas_rh);
-        AwesomeDialog(
-          context: context,
-          dialogType: DialogType.success,
-          headerAnimationLoop: false,
-          animType: AnimType.topSlide,
-          title: 'Berhasil',
-          desc: 'Berhasil Update Data Loading',
-          btnOkOnPress: () => Get.back(),
-        ).show();
-
-        // ScaffoldMessenger.of(context).showSnackBar(snackbar);
-      } else {
+      if (role == "User") {
         await HaulingService().post(
             shift: shift!,
             lokasi: lokasi!,
             lokasi_detail: lokasi_detail!,
             grup: grup!,
-            nama_supervisor: nama_supervisor!,
-            nama_pengawas: nama_mitra!,
-            pengawas_rh: nama!,
+            nama_supervisor: nama_supervisor,
+            nama_pengawas: nama_mitra,
+            pengawas_rh: nama,
             kondisi_1: kondisi_1!,
             kondisi_2: kondisi_2!,
             kondisi_3: kondisi_3!,
@@ -217,20 +224,162 @@ class HaulingPostController extends State<HaulingPostView> {
             evident_2: evident_2,
             qr_1: ttd_pengawas_mitra,
             qr_2: ttd_Pengawas_rh,
-            created_by_hauling: id_user);
-        // final snackbar = SnackBar(content: Text('Berhasil Menyimpan'));
-        // ScaffoldMessenger.of(context).showSnackBar(snackbar);
-
-        AwesomeDialog(
-          context: context,
-          dialogType: DialogType.success,
-          headerAnimationLoop: false,
-          animType: AnimType.topSlide,
-          title: 'Berhasil',
-          desc: 'Berhasil Menyimpan data Hauling',
-          btnOkOnPress: () => Get.back(),
-        ).show();
+            created_by_hauling: id_user,
+            status: status = "Waiting Approval Supervisor");
+      } else if (role == "Supervisor") {
+        await HaulingService().post(
+            shift: shift!,
+            lokasi: lokasi!,
+            lokasi_detail: lokasi_detail!,
+            grup: grup!,
+            nama_supervisor: nama,
+            nama_pengawas: nama_mitra,
+            kondisi_1: kondisi_1!,
+            kondisi_2: kondisi_2!,
+            kondisi_3: kondisi_3!,
+            kondisi_4: kondisi_4!,
+            kondisi_5: kondisi_5!,
+            kondisi_6: kondisi_6!,
+            kondisi_7: kondisi_7!,
+            kondisi_8: kondisi_8!,
+            kondisi_9: kondisi_9!,
+            kondisi_10: kondisi_10!,
+            kondisi_11: kondisi_11!,
+            kondisi_12: kondisi_12!,
+            kondisi_13: kondisi_13!,
+            kondisi_14: kondisi_14!,
+            kondisi_15: kondisi_15!,
+            kondisi_16: kondisi_16!,
+            kondisi_17: kondisi_17!,
+            kondisi_18: kondisi_18!,
+            kondisi_19: kondisi_19!,
+            kondisi_20: kondisi_20!,
+            kondisi_21: kondisi_21!,
+            kondisi_22: kondisi_22!,
+            kondisi_23: kondisi_23!,
+            kondisi_24: kondisi_24!,
+            kondisi_25: kondisi_25!,
+            kondisi_26: kondisi_26!,
+            kondisi_27: kondisi_27!,
+            kondisi_28: kondisi_28!,
+            kondisi_29: kondisi_29!,
+            kondisi_30: kondisi_30!,
+            kode_1: kode_1,
+            kode_2: kode_2,
+            kode_3: kode_3,
+            kode_4: kode_4,
+            kode_5: kode_5,
+            kode_6: kode_6,
+            kode_7: kode_7,
+            kode_8: kode_8,
+            kode_9: kode_9,
+            kode_10: kode_10,
+            kode_11: kode_11,
+            kode_12: kode_12,
+            kode_13: kode_13,
+            kode_14: kode_14,
+            kode_15: kode_15,
+            kode_16: kode_16,
+            kode_17: kode_17,
+            kode_18: kode_18,
+            kode_19: kode_19,
+            kode_20: kode_20,
+            kode_21: kode_21,
+            kode_22: kode_22,
+            kode_23: kode_23,
+            kode_24: kode_24,
+            kode_25: kode_25,
+            kode_26: kode_26,
+            kode_27: kode_27,
+            kode_28: kode_28,
+            kode_29: kode_29,
+            kode_30: kode_30,
+            evident_1: evident_1,
+            qr_1: ttd_pengawas_mitra,
+            created_by_hauling: id_user,
+            status: status);
+      } else {
+        await HaulingService().post(
+            shift: shift!,
+            grup: grupNow!,
+            lokasi: lokasi!,
+            lokasi_detail: lokasi_detail!,
+            nama_pengawas: nama,
+            kondisi_1: kondisi_1!,
+            kondisi_2: kondisi_2!,
+            kondisi_3: kondisi_3!,
+            kondisi_4: kondisi_4!,
+            kondisi_5: kondisi_5!,
+            kondisi_6: kondisi_6!,
+            kondisi_7: kondisi_7!,
+            kondisi_8: kondisi_8!,
+            kondisi_9: kondisi_9!,
+            kondisi_10: kondisi_10!,
+            kondisi_11: kondisi_11!,
+            kondisi_12: kondisi_12!,
+            kondisi_13: kondisi_13!,
+            kondisi_14: kondisi_14!,
+            kondisi_15: kondisi_15!,
+            kondisi_16: kondisi_16!,
+            kondisi_17: kondisi_17!,
+            kondisi_18: kondisi_18!,
+            kondisi_19: kondisi_19!,
+            kondisi_20: kondisi_20!,
+            kondisi_21: kondisi_21!,
+            kondisi_22: kondisi_22!,
+            kondisi_23: kondisi_23!,
+            kondisi_24: kondisi_24!,
+            kondisi_25: kondisi_25!,
+            kondisi_26: kondisi_26!,
+            kondisi_27: kondisi_27!,
+            kondisi_28: kondisi_28!,
+            kondisi_29: kondisi_29!,
+            kondisi_30: kondisi_30!,
+            kode_1: kode_1,
+            kode_2: kode_2,
+            kode_3: kode_3,
+            kode_4: kode_4,
+            kode_5: kode_5,
+            kode_6: kode_6,
+            kode_7: kode_7,
+            kode_8: kode_8,
+            kode_9: kode_9,
+            kode_10: kode_10,
+            kode_11: kode_11,
+            kode_12: kode_12,
+            kode_13: kode_13,
+            kode_14: kode_14,
+            kode_15: kode_15,
+            kode_16: kode_16,
+            kode_17: kode_17,
+            kode_18: kode_18,
+            kode_19: kode_19,
+            kode_20: kode_20,
+            kode_21: kode_21,
+            kode_22: kode_22,
+            kode_23: kode_23,
+            kode_24: kode_24,
+            kode_25: kode_25,
+            kode_26: kode_26,
+            kode_27: kode_27,
+            kode_28: kode_28,
+            kode_29: kode_29,
+            kode_30: kode_30,
+            evident_1: evident_1,
+            qr_1: ttd_pengawas_mitra,
+            created_by_hauling: id_user,
+            status: status);
       }
+
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.success,
+        headerAnimationLoop: false,
+        animType: AnimType.topSlide,
+        title: 'Berhasil',
+        desc: 'Berhasil Menyimpan data Hauling',
+        btnOkOnPress: () => Get.back(),
+      ).show();
     } catch (e) {
       AwesomeDialog(
         context: context,

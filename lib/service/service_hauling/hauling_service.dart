@@ -2,34 +2,28 @@ import 'package:SiPandu/core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HaulingService {
-  get() async {
+  Future<Map<String, String>> _getHeaders() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
+    return {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token"
+    };
+  }
+
+  get() async {
+    var headers = await _getHeaders();
     var response = await Dio().get(
-      "${ApiUrl.baseUrl}/api/haulings?sort=id:desc",
-      options: Options(
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "bearer ${token}"
-        },
-      ),
-    );
+        "${ApiUrl.baseUrl}/api/haulings?sort=id:desc",
+        options: Options(headers: headers));
     Map obj = response.data;
     return obj["data"];
   }
 
   get_one(id) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
-    var response = await Dio().get(
-      "${ApiUrl.baseUrl}/api/haulings/$id",
-      options: Options(
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer ${token}"
-        },
-      ),
-    );
+    var headers = await _getHeaders();
+    var response = await Dio().get("${ApiUrl.baseUrl}/api/haulings/$id",
+        options: Options(headers: headers));
     Map obj = response.data;
     // print(obj);
     return obj["data"];
@@ -39,10 +33,10 @@ class HaulingService {
       {required String lokasi,
       required String lokasi_detail,
       required String shift,
-      required String grup,
-      required String nama_supervisor,
-      required String nama_pengawas,
-      required String pengawas_rh,
+      String? grup,
+      String? nama_supervisor,
+      String? nama_pengawas,
+      String? pengawas_rh,
       required String kondisi_1,
       required String kondisi_2,
       required String kondisi_3,
@@ -108,24 +102,15 @@ class HaulingService {
       String? qr_1,
       String? qr_2,
       String? qr_3,
-      int? created_by_hauling}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
-
+      int? created_by_hauling,
+      String? status}) async {
+    var headers = await _getHeaders();
     DateTime now = DateTime.now();
-
-    // Mengformat tanggal sebagai string
     String formattedDate = DateFormat('yyyy-MM-dd').format(now);
-    // String formattedDate = "27-05-2024";
 
     var response = await Dio().post(
       "${ApiUrl.baseUrl}/api/haulings",
-      options: Options(
-        headers: {
-          "Authorization": "bearer $token",
-          "Content-Type": "application/json"
-        },
-      ),
+      options: Options(headers: headers),
       data: {
         "data": {
           "lokasi": lokasi,
@@ -200,7 +185,9 @@ class HaulingService {
           "evident_2": evident_2,
           "qr_1": qr_1,
           "qr_2": qr_2,
-          "id_user": created_by_hauling
+          "qr_3": qr_3,
+          "id_user": created_by_hauling,
+          "status": status
         }
       },
     );
@@ -208,40 +195,27 @@ class HaulingService {
     return obj;
   }
 
-  put(
+  put_pengawas(
       {required int id,
-      String? lokasi,
-      String? lokasi_detail,
-      String? shift,
-      String? grup,
-      String? nama_supervisor,
-      String? nama_pengawas,
-      String? evident_1,
-      String? evident_2,
-      String? qr_1,
+      String? pengawas_rh,
       String? qr_2,
-      String? qr_3}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
+      String? status}) async {
+    var headers = await _getHeaders();
     var response = await Dio().put("${ApiUrl.baseUrl}/api/haulings/$id",
-        options: Options(
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "bearer $token"
-          },
-        ),
+        options: Options(headers: headers),
+        data: {
+          "data": {"Pengawas_rh": pengawas_rh, "qr_2": qr_2, "status": status},
+        });
+    Map obj = response.data;
+    return obj;
+  }
+
+  put_qr_3({required int id, String? qr_3}) async {
+    var headers = await _getHeaders();
+    var response = await Dio().put("${ApiUrl.baseUrl}/api/haulings/$id",
+        options: Options(headers: headers),
         data: {
           "data": {
-            "lokasi": lokasi,
-            "nama_loading": lokasi_detail,
-            "shift": shift,
-            "grup": grup,
-            "nama_supervisor": nama_supervisor,
-            "nama_pengawas_mitra": nama_pengawas,
-            "evident_1": evident_1,
-            "evident_2": evident_2,
-            "qr_1": qr_1,
-            "qr_2": qr_2,
             "qr_3": qr_3,
           },
         });
@@ -249,19 +223,20 @@ class HaulingService {
     return obj;
   }
 
-  put_qr_3({required int id, String? qr_3}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
+  put_spv(
+      {required int id,
+      String? nama_supervisor,
+      String? qr_3,
+      String? status}) async {
+    var headers = await _getHeaders();
+
     var response = await Dio().put("${ApiUrl.baseUrl}/api/haulings/$id",
-        options: Options(
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "bearer $token"
-          },
-        ),
+        options: Options(headers: headers),
         data: {
           "data": {
+            "nama_supervisor": nama_supervisor,
             "qr_3": qr_3,
+            "status": status
           },
         });
     Map obj = response.data;

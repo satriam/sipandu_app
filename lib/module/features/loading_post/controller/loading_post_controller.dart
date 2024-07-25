@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:SiPandu/core.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
@@ -6,16 +8,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LoadingPostController extends State<LoadingPostView> {
   static late LoadingPostController instance;
   late LoadingPostView view;
+  String? role;
+  late StreamSubscription<Map<String, String>> _streamSubscription;
 
   @override
   void initState() {
     instance = this;
+    RefreshTokenService().refreshToken();
     getid();
+    _streamSubscription =
+        ShiftSchedule().shiftStream.listen((data) => updateShiftData(data));
+    fetchData();
     super.initState();
   }
 
   @override
-  void dispose() => super.dispose();
+  void dispose() {
+    super.dispose();
+    _streamSubscription.cancel();
+  }
 
   @override
   Widget build(BuildContext context) => widget.build(context, this);
@@ -24,7 +35,8 @@ class LoadingPostController extends State<LoadingPostView> {
 
   bool get isEditMode => widget.item != null;
   String? buttonEdit = "Save";
-  String? grup;
+  String? grups;
+  String? grupNow;
   String? shift;
   String? lokasi;
   String? lokasi_detail;
@@ -109,16 +121,45 @@ class LoadingPostController extends State<LoadingPostView> {
   String? keterangan_24;
   String? keterangan_25;
   String? keterangan_26;
+  String? status = "Waiting Approval Inspector";
   String? evident_1;
   String? evident_2;
   String? ttd_pengawas_mitra;
   String? ttd_Pengawas_rh;
+  String? ttd_Supervisor;
   int? id_user;
 
-  getid() async {
+  void updateShiftData(Map<String, String> data) {
+    setState(() {
+      grupNow = data['activeGroup'];
+      shift = data['currentShift'];
+    });
+  }
+
+  Future<void> fetchData() async {
+    Map<String, dynamic> userData = await getid();
+    setState(() {
+      role = userData['role'];
+      id_user = userData['id_user'];
+      grups = userData['grup'];
+      nama = userData['nama'];
+    });
+  }
+
+  Future<Map<String, dynamic>> getid() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    id_user = prefs.getInt('id_user');
-    nama = prefs.getString('nama');
+
+    int? idUser = prefs.getInt('id_user');
+    String? nama = prefs.getString('nama');
+    String? role = prefs.getString('role');
+    String? grup = prefs.getString('grup');
+
+    return {
+      'id_user': idUser,
+      'nama': nama,
+      'role': role,
+      'grup': grup,
+    };
   }
 
   doSave() async {
@@ -127,136 +168,289 @@ class LoadingPostController extends State<LoadingPostView> {
       return;
     }
     try {
-      if (isEditMode) {
-        await LoadingService().put(
-            id: widget.item!["id"],
+      if (role == "User") {
+        await LoadingService().post(
             shift: shift!,
             lokasi: lokasi!,
             lokasi_detail: lokasi_detail!,
-            grup: grup!,
-            nama_supervisor: nama_supervisor!,
-            nama_pengawas: nama_mitra!,
+            grup: grups!,
+            nama_supervisor: nama_supervisor,
+            nama_pengawas: nama_mitra,
+            pengawas_rh: nama,
+            kondisi_1: kondisi_1!,
+            kondisi_2: kondisi_2!,
+            kondisi_3: kondisi_3!,
+            kondisi_4: kondisi_4!,
+            kondisi_5: kondisi_5!,
+            kondisi_6: kondisi_6!,
+            kondisi_7: kondisi_7!,
+            kondisi_8: kondisi_8!,
+            kondisi_9: kondisi_9!,
+            kondisi_10: kondisi_10!,
+            kondisi_11: kondisi_11!,
+            kondisi_12: kondisi_12!,
+            kondisi_13: kondisi_13!,
+            kondisi_14: kondisi_14!,
+            kondisi_15: kondisi_15!,
+            kondisi_16: kondisi_16!,
+            kondisi_17: kondisi_17!,
+            kondisi_18: kondisi_18!,
+            kondisi_19: kondisi_19!,
+            kondisi_20: kondisi_20!,
+            kondisi_21: kondisi_21!,
+            kondisi_22: kondisi_22!,
+            kondisi_23: kondisi_23!,
+            kondisi_24: kondisi_24!,
+            kondisi_25: kondisi_25!,
+            kondisi_26: kondisi_26!,
+            kode_1: kode_1,
+            kode_2: kode_2,
+            kode_3: kode_3,
+            kode_4: kode_4,
+            kode_5: kode_5,
+            kode_6: kode_6,
+            kode_7: kode_7,
+            kode_8: kode_8,
+            kode_9: kode_9,
+            kode_10: kode_10,
+            kode_11: kode_11,
+            kode_12: kode_12,
+            kode_13: kode_13,
+            kode_14: kode_14,
+            kode_15: kode_15,
+            kode_16: kode_16,
+            kode_17: kode_17,
+            kode_18: kode_18,
+            kode_19: kode_19,
+            kode_20: kode_20,
+            kode_21: kode_21,
+            kode_22: kode_22,
+            kode_23: kode_23,
+            kode_24: kode_24,
+            kode_25: kode_25,
+            kode_26: kode_26,
+            keterangan_1: keterangan_1,
+            keterangan_2: keterangan_2,
+            keterangan_3: keterangan_3,
+            keterangan_4: keterangan_4,
+            keterangan_5: keterangan_5,
+            keterangan_6: keterangan_6,
+            keterangan_7: keterangan_7,
+            keterangan_8: keterangan_8,
+            keterangan_9: keterangan_9,
+            keterangan_10: keterangan_10,
+            keterangan_11: keterangan_11,
+            keterangan_12: keterangan_12,
+            keterangan_13: keterangan_13,
+            keterangan_14: keterangan_14,
+            keterangan_15: keterangan_15,
+            keterangan_16: keterangan_16,
+            keterangan_17: keterangan_17,
+            keterangan_18: keterangan_18,
+            keterangan_19: keterangan_19,
+            keterangan_20: keterangan_20,
+            keterangan_21: keterangan_21,
+            keterangan_22: keterangan_22,
+            keterangan_23: keterangan_23,
+            keterangan_24: keterangan_24,
+            keterangan_25: keterangan_25,
+            keterangan_26: keterangan_26,
             evident_1: evident_1,
             evident_2: evident_2,
             qr_1: ttd_pengawas_mitra,
-            qr_2: ttd_Pengawas_rh);
-        AwesomeDialog(
-          context: context,
-          dialogType: DialogType.success,
-          headerAnimationLoop: false,
-          animType: AnimType.topSlide,
-          title: 'Berhasil',
-          desc: 'Berhasil Update Data Loading',
-          btnOkOnPress: () => Get.back(),
-        ).show();
-
-        // ScaffoldMessenger.of(context).showSnackBar(snackbar);
+            qr_2: ttd_Pengawas_rh,
+            created_by_loading: id_user,
+            status: status = "Waiting Approval Supervisor");
+      } else if (role == "Supervisor") {
+        await LoadingService().post(
+            shift: shift!,
+            lokasi: lokasi!,
+            lokasi_detail: lokasi_detail!,
+            grup: grups!,
+            nama_supervisor: nama,
+            nama_pengawas: nama_mitra,
+            kondisi_1: kondisi_1!,
+            kondisi_2: kondisi_2!,
+            kondisi_3: kondisi_3!,
+            kondisi_4: kondisi_4!,
+            kondisi_5: kondisi_5!,
+            kondisi_6: kondisi_6!,
+            kondisi_7: kondisi_7!,
+            kondisi_8: kondisi_8!,
+            kondisi_9: kondisi_9!,
+            kondisi_10: kondisi_10!,
+            kondisi_11: kondisi_11!,
+            kondisi_12: kondisi_12!,
+            kondisi_13: kondisi_13!,
+            kondisi_14: kondisi_14!,
+            kondisi_15: kondisi_15!,
+            kondisi_16: kondisi_16!,
+            kondisi_17: kondisi_17!,
+            kondisi_18: kondisi_18!,
+            kondisi_19: kondisi_19!,
+            kondisi_20: kondisi_20!,
+            kondisi_21: kondisi_21!,
+            kondisi_22: kondisi_22!,
+            kondisi_23: kondisi_23!,
+            kondisi_24: kondisi_24!,
+            kondisi_25: kondisi_25!,
+            kondisi_26: kondisi_26!,
+            kode_1: kode_1,
+            kode_2: kode_2,
+            kode_3: kode_3,
+            kode_4: kode_4,
+            kode_5: kode_5,
+            kode_6: kode_6,
+            kode_7: kode_7,
+            kode_8: kode_8,
+            kode_9: kode_9,
+            kode_10: kode_10,
+            kode_11: kode_11,
+            kode_12: kode_12,
+            kode_13: kode_13,
+            kode_14: kode_14,
+            kode_15: kode_15,
+            kode_16: kode_16,
+            kode_17: kode_17,
+            kode_18: kode_18,
+            kode_19: kode_19,
+            kode_20: kode_20,
+            kode_21: kode_21,
+            kode_22: kode_22,
+            kode_23: kode_23,
+            kode_24: kode_24,
+            kode_25: kode_25,
+            kode_26: kode_26,
+            keterangan_1: keterangan_1,
+            keterangan_2: keterangan_2,
+            keterangan_3: keterangan_3,
+            keterangan_4: keterangan_4,
+            keterangan_5: keterangan_5,
+            keterangan_6: keterangan_6,
+            keterangan_7: keterangan_7,
+            keterangan_8: keterangan_8,
+            keterangan_9: keterangan_9,
+            keterangan_10: keterangan_10,
+            keterangan_11: keterangan_11,
+            keterangan_12: keterangan_12,
+            keterangan_13: keterangan_13,
+            keterangan_14: keterangan_14,
+            keterangan_15: keterangan_15,
+            keterangan_16: keterangan_16,
+            keterangan_17: keterangan_17,
+            keterangan_18: keterangan_18,
+            keterangan_19: keterangan_19,
+            keterangan_20: keterangan_20,
+            keterangan_21: keterangan_21,
+            keterangan_22: keterangan_22,
+            keterangan_23: keterangan_23,
+            keterangan_24: keterangan_24,
+            keterangan_25: keterangan_25,
+            keterangan_26: keterangan_26,
+            evident_1: evident_1,
+            qr_1: ttd_pengawas_mitra,
+            qr_3: ttd_Supervisor,
+            created_by_loading: id_user,
+            status: status);
       } else {
         await LoadingService().post(
-          shift: shift!,
-          lokasi: lokasi!,
-          lokasi_detail: lokasi_detail!,
-          grup: grup!,
-          nama_supervisor: nama_supervisor!,
-          nama_pengawas: nama_mitra!,
-          pengawas_rh: nama!,
-          kondisi_1: kondisi_1!,
-          kondisi_2: kondisi_2!,
-          kondisi_3: kondisi_3!,
-          kondisi_4: kondisi_4!,
-          kondisi_5: kondisi_5!,
-          kondisi_6: kondisi_6!,
-          kondisi_7: kondisi_7!,
-          kondisi_8: kondisi_8!,
-          kondisi_9: kondisi_9!,
-          kondisi_10: kondisi_10!,
-          kondisi_11: kondisi_11!,
-          kondisi_12: kondisi_12!,
-          kondisi_13: kondisi_13!,
-          kondisi_14: kondisi_14!,
-          kondisi_15: kondisi_15!,
-          kondisi_16: kondisi_16!,
-          kondisi_17: kondisi_17!,
-          kondisi_18: kondisi_18!,
-          kondisi_19: kondisi_19!,
-          kondisi_20: kondisi_20!,
-          kondisi_21: kondisi_21!,
-          kondisi_22: kondisi_22!,
-          kondisi_23: kondisi_23!,
-          kondisi_24: kondisi_24!,
-          kondisi_25: kondisi_25!,
-          kondisi_26: kondisi_26!,
-          kode_1: kode_1,
-          kode_2: kode_2,
-          kode_3: kode_3,
-          kode_4: kode_4,
-          kode_5: kode_5,
-          kode_6: kode_6,
-          kode_7: kode_7,
-          kode_8: kode_8,
-          kode_9: kode_9,
-          kode_10: kode_10,
-          kode_11: kode_11,
-          kode_12: kode_12,
-          kode_13: kode_13,
-          kode_14: kode_14,
-          kode_15: kode_15,
-          kode_16: kode_16,
-          kode_17: kode_17,
-          kode_18: kode_18,
-          kode_19: kode_19,
-          kode_20: kode_20,
-          kode_21: kode_21,
-          kode_22: kode_22,
-          kode_23: kode_23,
-          kode_24: kode_24,
-          kode_25: kode_25,
-          kode_26: kode_26,
-          keterangan_1: keterangan_1,
-          keterangan_2: keterangan_2,
-          keterangan_3: keterangan_3,
-          keterangan_4: keterangan_4,
-          keterangan_5: keterangan_5,
-          keterangan_6: keterangan_6,
-          keterangan_7: keterangan_7,
-          keterangan_8: keterangan_8,
-          keterangan_9: keterangan_9,
-          keterangan_10: keterangan_10,
-          keterangan_11: keterangan_11,
-          keterangan_12: keterangan_12,
-          keterangan_13: keterangan_13,
-          keterangan_14: keterangan_14,
-          keterangan_15: keterangan_15,
-          keterangan_16: keterangan_16,
-          keterangan_17: keterangan_17,
-          keterangan_18: keterangan_18,
-          keterangan_19: keterangan_19,
-          keterangan_20: keterangan_20,
-          keterangan_21: keterangan_21,
-          keterangan_22: keterangan_22,
-          keterangan_23: keterangan_23,
-          keterangan_24: keterangan_24,
-          keterangan_25: keterangan_25,
-          keterangan_26: keterangan_26,
-          evident_1: evident_1,
-          evident_2: evident_2,
-          qr_1: ttd_pengawas_mitra,
-          qr_2: ttd_Pengawas_rh,
-          created_by_loading: id_user,
-        );
-        // final snackbar = SnackBar(content: Text('Berhasil Menyimpan'));
-        // ScaffoldMessenger.of(context).showSnackBar(snackbar);
-
-        AwesomeDialog(
-          context: context,
-          dialogType: DialogType.success,
-          headerAnimationLoop: false,
-          animType: AnimType.topSlide,
-          title: 'Berhasil',
-          desc: 'Berhasil Menyimpan data Loading',
-          btnOkOnPress: () => Get.back(),
-        ).show();
+            shift: shift!,
+            grup: grupNow!,
+            lokasi: lokasi!,
+            lokasi_detail: lokasi_detail!,
+            nama_pengawas: nama,
+            kondisi_1: kondisi_1!,
+            kondisi_2: kondisi_2!,
+            kondisi_3: kondisi_3!,
+            kondisi_4: kondisi_4!,
+            kondisi_5: kondisi_5!,
+            kondisi_6: kondisi_6!,
+            kondisi_7: kondisi_7!,
+            kondisi_8: kondisi_8!,
+            kondisi_9: kondisi_9!,
+            kondisi_10: kondisi_10!,
+            kondisi_11: kondisi_11!,
+            kondisi_12: kondisi_12!,
+            kondisi_13: kondisi_13!,
+            kondisi_14: kondisi_14!,
+            kondisi_15: kondisi_15!,
+            kondisi_16: kondisi_16!,
+            kondisi_17: kondisi_17!,
+            kondisi_18: kondisi_18!,
+            kondisi_19: kondisi_19!,
+            kondisi_20: kondisi_20!,
+            kondisi_21: kondisi_21!,
+            kondisi_22: kondisi_22!,
+            kondisi_23: kondisi_23!,
+            kondisi_24: kondisi_24!,
+            kondisi_25: kondisi_25!,
+            kondisi_26: kondisi_26!,
+            kode_1: kode_1,
+            kode_2: kode_2,
+            kode_3: kode_3,
+            kode_4: kode_4,
+            kode_5: kode_5,
+            kode_6: kode_6,
+            kode_7: kode_7,
+            kode_8: kode_8,
+            kode_9: kode_9,
+            kode_10: kode_10,
+            kode_11: kode_11,
+            kode_12: kode_12,
+            kode_13: kode_13,
+            kode_14: kode_14,
+            kode_15: kode_15,
+            kode_16: kode_16,
+            kode_17: kode_17,
+            kode_18: kode_18,
+            kode_19: kode_19,
+            kode_20: kode_20,
+            kode_21: kode_21,
+            kode_22: kode_22,
+            kode_23: kode_23,
+            kode_24: kode_24,
+            kode_25: kode_25,
+            kode_26: kode_26,
+            keterangan_1: keterangan_1,
+            keterangan_2: keterangan_2,
+            keterangan_3: keterangan_3,
+            keterangan_4: keterangan_4,
+            keterangan_5: keterangan_5,
+            keterangan_6: keterangan_6,
+            keterangan_7: keterangan_7,
+            keterangan_8: keterangan_8,
+            keterangan_9: keterangan_9,
+            keterangan_10: keterangan_10,
+            keterangan_11: keterangan_11,
+            keterangan_12: keterangan_12,
+            keterangan_13: keterangan_13,
+            keterangan_14: keterangan_14,
+            keterangan_15: keterangan_15,
+            keterangan_16: keterangan_16,
+            keterangan_17: keterangan_17,
+            keterangan_18: keterangan_18,
+            keterangan_19: keterangan_19,
+            keterangan_20: keterangan_20,
+            keterangan_21: keterangan_21,
+            keterangan_22: keterangan_22,
+            keterangan_23: keterangan_23,
+            keterangan_24: keterangan_24,
+            keterangan_25: keterangan_25,
+            keterangan_26: keterangan_26,
+            evident_1: evident_1,
+            qr_1: ttd_pengawas_mitra,
+            created_by_loading: id_user,
+            status: status);
       }
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.success,
+        headerAnimationLoop: false,
+        animType: AnimType.topSlide,
+        title: 'Berhasil',
+        desc: 'Berhasil Menyimpan data Loading',
+        btnOkOnPress: () => Get.back(),
+      ).show();
     } catch (e) {
       AwesomeDialog(
         context: context,

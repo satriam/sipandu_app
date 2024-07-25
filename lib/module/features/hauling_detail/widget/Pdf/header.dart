@@ -26,7 +26,7 @@ Future<pw.Widget> buildHeaderHauling(Map<String, dynamic> data) async {
               ),
               pw.Center(
                 child: pw.Text(
-                  'CHECKLIST INSPEKSI LOADING POINT',
+                  'CHECKLIST INSPEKSI HAULING ROAD',
                   style: pw.TextStyle(
                     fontSize: 14,
                     fontWeight: pw.FontWeight.bold,
@@ -114,7 +114,7 @@ Future<pw.Widget> buildHeaderHauling(Map<String, dynamic> data) async {
               pw.Padding(
                 padding: pw.EdgeInsets.only(top: 1, bottom: 1, left: 8),
                 child: pw.Text(
-                  'Loading Point: ${data['attributes']?['nama_loading'] ?? ""} ',
+                  'Hauling Road: ${data['attributes']?['nama_hauling'] ?? ""} ',
                   textAlign: pw.TextAlign.left,
                   style: pw.TextStyle(
                     fontSize: 8,

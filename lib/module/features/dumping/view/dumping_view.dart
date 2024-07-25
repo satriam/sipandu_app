@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:get/get.dart' as getx;
 import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:SiPandu/core.dart';
@@ -22,92 +24,142 @@ class DumpingView extends StatefulWidget {
         onRefresh: () async {
           await controller.getProfile();
         },
-        child: controller.isLoading
-            ? ListView.builder(
-                itemCount: 5, // Jumlah item untuk efek shimmer
-                physics: const ScrollPhysics(),
-                itemBuilder: (BuildContext context, int index) {
-                  return ShimmerDumpingListItem();
-                },
-              )
-            : controller.Dumping.isEmpty
-                ? Center(
-                    child: Lottie.asset('assets/animation/notfoundata.json'),
-                  )
-                : ListView.builder(
-                    itemCount: controller.Dumping.length,
-                    physics: const ScrollPhysics(),
-                    itemBuilder: (BuildContext context, int index) {
-                      var item = controller.Dumping[index];
-                      bool isQr3NotNull = item['attributes']['qr_3'] != null;
-                      String formatDate(String dateStr) {
-                        DateTime dateTime = DateTime.parse(dateStr);
-                        return DateFormat('dd/MM/yyyy kk:mm').format(dateTime);
-                      }
-
-                      return InkWell(
-                          onTap: () async {
-                            await Get.to(DumpingDetailView(item: item));
-                          },
-                          child: Card(
-                            surfaceTintColor: Colors.white10,
-                            child: Padding(
-                              padding: const EdgeInsets.all(15),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                            item['attributes']['nama_dumping'],
-                                            style: TextStyle(
-                                                fontWeight: bold,
-                                                fontSize: 15)),
-                                      ),
-                                      if (isQr3NotNull)
-                                        Text("Approved")
-                                      else
-                                        Text("Waiting Approval")
-                                      // Icon(Icons.check, color: Colors.green),
-                                    ],
-                                  ),
-                                  SizedBox(height: 2),
-                                  Text(
-                                    formatDate(item['attributes']['createdAt']),
-                                    style: Theme.of(context).textTheme.caption,
-                                  ),
-                                  SizedBox(height: 15),
-                                  Row(children: [
-                                    CircleAvatar(
-                                      radius: 25,
-                                      backgroundColor: Colors.grey[200],
-                                      backgroundImage: NetworkImage(
-                                        item['attributes']['evident_1'] ??
-                                            "${ApiUrl.baseUrl}/uploads/thumbnail_no_image_251fa67e50.jpg",
-                                      ),
-                                    ),
-                                    SizedBox(width: 5),
-                                    CircleAvatar(
-                                      radius: 25,
-                                      backgroundColor: Colors.grey[200],
-                                      backgroundImage: NetworkImage(
-                                        item['attributes']['evident_2'] ??
-                                            "${ApiUrl.baseUrl}/uploads/thumbnail_no_image_251fa67e50.jpg",
-                                      ),
-                                    ),
-                                  ])
-                                ],
-                              ),
-                            ),
-                            elevation: 5,
-                            margin: EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 15),
-                          ));
+        child: getx.Obx(() => Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: QCategoryPicker(
+                    items: [
+                      {"label": "All", "value": ""},
+                      {
+                        "label": "Waiting Approval Inspector",
+                        "value": "Waiting Approval Inspector"
+                      },
+                      {
+                        "label": "Waiting Approval Supervisor",
+                        "value": "Waiting Approval Supervisor"
+                      },
+                      {"label": "Complete", "value": "Complete"},
+                    ],
+                    value: controller.selectedCategory.value.isEmpty
+                        ? null
+                        : controller.selectedCategory.value,
+                    validator: Validator.required,
+                    onChanged: (index, label, value, item) async {
+                      controller.selectedCategory.value = value ?? "";
+                      controller.filteredDumping;
+                      await controller.getProfile();
                     },
                   ),
+                ),
+                Expanded(
+                  child: controller.isLoading
+                      ? ListView.builder(
+                          itemCount: 5,
+                          physics: const ScrollPhysics(),
+                          itemBuilder: (BuildContext context, int index) {
+                            return ShimmerDumpingListItem();
+                          },
+                        )
+                      : controller.filteredDumping.isEmpty
+                          ? Center(
+                              child: Lottie.asset(
+                                  'assets/animation/notfoundata.json'),
+                            )
+                          : ListView.builder(
+                              itemCount: controller.filteredDumping.length,
+                              physics: const ScrollPhysics(),
+                              itemBuilder: (BuildContext context, int index) {
+                                var item = controller.filteredDumping[index];
+
+                                item['attributes']['qr_3'] != null;
+                                String formatDate(String dateStr) {
+                                  DateTime dateTime = DateTime.parse(dateStr);
+                                  return DateFormat('dd/MM/yyyy kk:mm')
+                                      .format(dateTime);
+                                }
+
+                                return InkWell(
+                                  onTap: () async {
+                                    await Get.to(DumpingDetailView(item: item));
+                                  },
+                                  child: Card(
+                                    surfaceTintColor: Colors.white10,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(15),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  item['attributes']
+                                                      ['nama_dumping'],
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 15),
+                                                ),
+                                              ),
+                                              Text(
+                                                item['attributes']['status'],
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(height: 2),
+                                          Text(
+                                            formatDate(item['attributes']
+                                                ['createdAt']),
+                                          ),
+                                          SizedBox(height: 15),
+                                          Row(
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 25,
+                                                backgroundColor:
+                                                    Colors.grey[200],
+                                                backgroundImage: NetworkImage(
+                                                  item['attributes']
+                                                          ['evident_1'] ??
+                                                      "${AppConfig.imageUrlNotFound}",
+                                                ),
+                                              ),
+                                              SizedBox(width: 5),
+                                              CircleAvatar(
+                                                radius: 25,
+                                                backgroundColor:
+                                                    Colors.grey[200],
+                                                backgroundImage: NetworkImage(
+                                                  item['attributes']
+                                                          ['evident_2'] ??
+                                                      "${AppConfig.imageUrlNotFound}",
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    elevation: 5,
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 15),
+                                  )
+                                      .animate()
+                                      .moveX(
+                                        begin: index % 2 == 0 ? -200 : 200,
+                                        duration: ((index + 1) * 400).ms,
+                                      )
+                                      .fadeIn(),
+                                );
+                              },
+                            ),
+                ),
+              ],
+            )),
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),

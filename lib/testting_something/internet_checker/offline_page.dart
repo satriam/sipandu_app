@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:SiPandu/core.dart';
@@ -80,7 +79,7 @@ class _OfflinePageState extends State<OfflinePage> {
                   )
                 : SizedBox(),
             Text(
-              _connectionStatusMessage ?? 'Checking internet connection...',
+              _connectionStatusMessage,
               style: TextStyle(fontSize: 18),
             ),
           ],

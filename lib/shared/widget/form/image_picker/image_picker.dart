@@ -1,10 +1,7 @@
 import 'dart:io';
 import 'package:SiPandu/core.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 
@@ -162,7 +159,7 @@ class _QImagePickerState extends State<QImagePicker> {
                   : DecorationImage(
                       image: NetworkImage(
                         imageUrl == null
-                            ? "${ApiUrl.baseUrl}/uploads/thumbnail_no_image_251fa67e50.jpg"
+                            ? "${AppConfig.imageUrlNotFound}"
                             : imageUrl!,
                       ),
                       fit: BoxFit.cover,
@@ -210,7 +207,7 @@ class _QImagePickerState extends State<QImagePicker> {
             child: FormField(
                 initialValue: false,
                 validator: (value) {
-                  return widget.validator!(imageUrl);
+                  return widget.validator?.call(imageUrl);
                 },
                 enabled: true,
                 builder: (FormFieldState<bool> field) {

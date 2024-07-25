@@ -1,4 +1,4 @@
-package com.example.sipandu_app
+package com.rehandling.sipandu
 
 import io.flutter.embedding.android.FlutterActivity
 

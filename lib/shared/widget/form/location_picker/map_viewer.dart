@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 
 class MapViewer extends StatefulWidget {
   final double? latitude;
@@ -37,8 +36,6 @@ class _MapViewerState extends State<MapViewer> {
         FlutterMap(
           mapController: widget.controller,
           options: MapOptions(
-            center: LatLng(latitude, longitude),
-            zoom: 13.0,
             onPositionChanged: (pos, _) {
               if (widget.onPositionChanged != null) {
                 widget.onPositionChanged!(pos, _);

@@ -1,8 +1,6 @@
-import 'package:SiPandu/widget/dropdown_item.dart';
-import 'package:SiPandu/shared/widget/form/signature/signature.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:SiPandu/core.dart';
-import '../controller/loading_post_controller.dart';
 
 class LoadingPostView extends StatefulWidget {
   final Map? item;
@@ -28,110 +26,52 @@ class LoadingPostView extends StatefulWidget {
                     child: Container(
                       // Tambahkan padding di dalam Card
                       padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        children: [
-                          QDropdownField(
-                            label: "Grup",
-                            validator: Validator.required,
-                            items: [
-                              {
-                                "label": "Grup A",
-                                "value": "Grup A",
-                              },
-                              {
-                                "label": "Grup B",
-                                "value": "Grup B",
-                              },
-                              {
-                                "label": "Grup C",
-                                "value": "Grup C",
-                              },
-                              {"label": "Grup D", "value": "Grup D"}
-                            ],
-                            value: controller.grup,
-                            onChanged: (value, label) {
-                              controller.grup = value;
+                      child: Column(children: [
+                        QDropdownField(
+                          label: "Lokasi",
+                          validator: Validator.required,
+                          items: [
+                            {
+                              "label": "TAL",
+                              "value": "TAL",
                             },
-                          ),
-                          SizedBox(height: 10),
-                          QDropdownField(
-                            label: "Shift",
-                            validator: Validator.required,
-                            items: [
-                              {
-                                "label": "Shift 1",
-                                "value": "Shift 1",
-                              },
-                              {
-                                "label": "Shift 2",
-                                "value": "Shift 2",
-                              },
-                              {
-                                "label": "Shift 3",
-                                "value": "Shift 3",
-                              },
-                            ],
-                            value: controller.shift,
-                            onChanged: (value, label) {
-                              controller.shift = value;
+                            {
+                              "label": "MTB",
+                              "value": "MTB",
                             },
-                          ),
-                          SizedBox(height: 10),
-                          QDropdownField(
-                            label: "Lokasi",
-                            validator: Validator.required,
-                            items: [
-                              {
-                                "label": "TAL",
-                                "value": "TAL",
-                              },
-                              {
-                                "label": "MTB",
-                                "value": "MTB",
-                              },
-                              {
-                                "label": "Banko",
-                                "value": "Bank",
-                              }
-                            ],
-                            value: controller.lokasi,
-                            onChanged: (value, label) {
-                              controller.lokasi = value;
-                            },
-                          ),
-                          SizedBox(
-                              height: 10), // Menambahkan jarak antar widget
-                          QAutoComplete(
-                            label: "Nama Lokasi Detail",
-                            validator: Validator.required,
-                            items: Location_item.items,
-                            value: controller.lokasi_detail,
-                            onChanged: (value, label) {
-                              controller.lokasi_detail = value;
-                            },
-                          ),
-                          SizedBox(
-                              height: 10), // Menambahkan jarak antar widget
-                          QAutoComplete(
-                            label: "Nama Supervisor",
-                            validator: Validator.required,
-                            items: Supervisor.items,
-                            value: controller.nama_supervisor,
-                            onChanged: (value, label) {
-                              controller.nama_supervisor = value;
-                            },
-                          ),
-                          SizedBox(height: 10),
+                            {
+                              "label": "Banko",
+                              "value": "Banko",
+                            }
+                          ],
+                          value: controller.lokasi,
+                          onChanged: (value, label) {
+                            controller.lokasi = value;
+                          },
+                        ),
+                        SizedBox(height: 10), // Menambahkan jarak antar widget
+                        QAutoComplete(
+                          label: "Nama Lokasi Detail",
+                          validator: Validator.required,
+                          items: Location_item.items,
+                          value: controller.lokasi_detail,
+                          onChanged: (value, label) {
+                            controller.lokasi_detail = value;
+                          },
+                        ),
+
+                        SizedBox(height: 10),
+                        if (controller.role.toString() == "User" ||
+                            controller.role.toString() == "Supervisor")
                           QTextField(
                             label: "Nama Pengawas Mitra",
                             validator: Validator.required,
-                            value: controller.nama_mitra,
+                            value: null,
                             onChanged: (value) {
                               controller.nama_mitra = value;
                             },
                           ),
-                        ],
-                      ),
+                      ]),
                     ),
                   ),
                   Card(
@@ -1156,7 +1096,7 @@ class LoadingPostView extends StatefulWidget {
                           padding: const EdgeInsets.all(10.0),
                           child: Column(children: [
                             QImagePicker(
-                              label: "Photo Evident 1",
+                              label: "Photo Grid",
                               validator: Validator.required,
                               value: controller.evident_1,
                               onChanged: (value) {
@@ -1164,22 +1104,23 @@ class LoadingPostView extends StatefulWidget {
                               },
                             ),
                           ]))),
-                  Card(
-                      // Membungkus dengan Card
-                      elevation: 2,
-                      child: Container(
-                          // Tambahkan padding di dalam Card
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(children: [
-                            QImagePicker(
-                              label: "Photo Evident 2",
-                              validator: Validator.required,
-                              value: controller.evident_2,
-                              onChanged: (value) {
-                                controller.evident_2 = value;
-                              },
-                            ),
-                          ]))),
+                  if (controller.role.toString() == "User")
+                    Card(
+                        // Membungkus dengan Card
+                        elevation: 2,
+                        child: Container(
+                            // Tambahkan padding di dalam Card
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(children: [
+                              QImagePicker(
+                                label: "Photo",
+                                validator: Validator.required,
+                                value: controller.evident_2,
+                                onChanged: (value) {
+                                  controller.evident_2 = value;
+                                },
+                              ),
+                            ]))),
                   Card(
                     elevation: 5,
                     child: Container(
@@ -1190,105 +1131,126 @@ class LoadingPostView extends StatefulWidget {
                             id: 'pengawas_mitra', // unique id for Pengawas Mitra
                             label: 'Tanda Tangan Pengawas Mitra',
                             hint: 'Sign here',
-                            helper: 'Please provide your signature',
-                            value: controller.ttd_pengawas_mitra,
+                            helper:
+                                'Pastikan Pengawas Mitra Ada Di Lapangan!\nJangan Lupa untuk Menekan Save!',
                             onChanged: (value) {
                               controller.ttd_pengawas_mitra = value;
                             },
                             onSubmitted: (signature) async {
-                              await showDialog<void>(
-                                context: context,
-                                barrierDismissible: true,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text('Berhasil!'),
-                                    content: const SingleChildScrollView(
-                                      child: ListBody(
-                                        children: <Widget>[
-                                          Text(
-                                              'Berhasil Simpan tanda tangan Pengawas Mitra'),
-                                        ],
-                                      ),
-                                    ),
-                                    actions: <Widget>[
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.blueGrey,
-                                        ),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text("Ok"),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
+                              showSuccesDialog(context);
                             },
                           ),
                         ],
                       ),
                     ),
                   ),
-                  Card(
-                    elevation: 5,
-                    child: Container(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        children: [
-                          QSignature(
-                            id: 'pengawas_rehandling', // unique id for Pengawas Rehandling
-                            label: 'Tanda Tangan Pengawas Rehandling',
-                            hint: 'Sign here',
-                            helper: 'Please provide your signature',
-                            onChanged: (value) {
-                              controller.ttd_Pengawas_rh = value;
-                            },
-                            onSubmitted: (signature) async {
-                              await showDialog<void>(
-                                context: context,
-                                barrierDismissible: true,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text('Berhasil!'),
-                                    content: const SingleChildScrollView(
-                                      child: ListBody(
-                                        children: <Widget>[
-                                          Text(
-                                              'Berhasil Simpan tanda tangan Pengawas Rehandling'),
-                                        ],
-                                      ),
-                                    ),
-                                    actions: <Widget>[
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.blueGrey,
-                                        ),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text("Ok"),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ],
+                  if (controller.role.toString() == "User")
+                    Card(
+                      elevation: 5,
+                      child: Container(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: [
+                            QSignature(
+                              id: 'pengawas_rehandling', // unique id for Pengawas Rehandling
+                              label: 'Tanda Tangan Pengawas Rehandling',
+                              hint: 'Sign here',
+                              helper: 'Please provide your signature',
+                              onChanged: (value) {
+                                controller.ttd_Pengawas_rh = value;
+                              },
+                              onSubmitted: (signature) async {
+                                showSuccesDialog(context);
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
+                  if (controller.role.toString() == "Supervisor")
+                    Card(
+                      elevation: 5,
+                      child: Container(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: [
+                            QSignature(
+                              id: 'supervisor_rehandling', // unique id for Pengawas Rehandling
+                              label: 'Tanda Tangan Supervisor',
+                              hint: 'Sign here',
+                              helper: 'Please provide your signature',
+                              onChanged: (value) {
+                                controller.ttd_Supervisor = value;
+                              },
+                              onSubmitted: (signature) async {
+                                showSuccesDialog(context);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   SizedBox(height: 10),
                 ]),
               ))),
       bottomNavigationBar: QActionButton(
         label: controller.buttonEdit.toString(),
         onPressed: () {
-          controller.doSave();
+          switch (controller.role) {
+            case 'User':
+              if (controller.ttd_Pengawas_rh == null ||
+                  controller.ttd_pengawas_mitra == null) {
+                showErrorDialog(context);
+              } else {
+                controller.doSave();
+              }
+              break;
+            case 'Mitra':
+              if (controller.ttd_pengawas_mitra == null) {
+                showErrorDialog(context);
+              } else {
+                controller.doSave();
+              }
+              break;
+
+            case 'Supervisor':
+              if (controller.ttd_pengawas_mitra == null ||
+                  controller.ttd_Supervisor == null) {
+                showErrorDialog(context);
+              } else {
+                controller.doSave();
+              }
+            // Add more cases as needed
+            default:
+              print("Role kosong");
+              break;
+          }
+          // controller.doSaveDumping();
         },
       ),
     );
+  }
+
+  void showErrorDialog(BuildContext context) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.error,
+      animType: AnimType.rightSlide,
+      headerAnimationLoop: true,
+      title: "Gagal Simpan!",
+      desc: "Cek Kembali data",
+    ).show();
+  }
+
+  void showSuccesDialog(BuildContext context) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.rightSlide,
+      headerAnimationLoop: true,
+      title: "Berhasil!",
+      desc: "Data Tanda tangan tersimpan!",
+    ).show();
   }
 
   @override

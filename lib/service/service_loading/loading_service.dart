@@ -2,150 +2,135 @@ import 'package:SiPandu/core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoadingService {
-  get() async {
+  Future<Map<String, String>> _getHeaders() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
+    return {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token"
+    };
+  }
+
+  get() async {
+    var headers = await _getHeaders();
     var response = await Dio().get(
-      "${ApiUrl.baseUrl}/api/loadings?sort=id:desc",
-      options: Options(
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer ${token}"
-        },
-      ),
-    );
+        "${ApiUrl.baseUrl}/api/loadings?sort=id:desc",
+        options: Options(headers: headers));
+
     Map obj = response.data;
     // print(obj);
     return obj["data"];
   }
 
   get_one(id) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
-    var response = await Dio().get(
-      "${ApiUrl.baseUrl}/api/loadings/$id",
-      options: Options(
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer ${token}"
-        },
-      ),
-    );
+    var headers = await _getHeaders();
+    var response = await Dio().get("${ApiUrl.baseUrl}/api/loadings/$id",
+        options: Options(headers: headers));
+
     Map obj = response.data;
     // print(obj);
     return obj["data"];
   }
 
-  post({
-    required String lokasi,
-    required String lokasi_detail,
-    required String shift,
-    required String grup,
-    required String nama_supervisor,
-    required String nama_pengawas,
-    required String pengawas_rh,
-    required String kondisi_1,
-    required String kondisi_2,
-    required String kondisi_3,
-    required String kondisi_4,
-    required String kondisi_5,
-    required String kondisi_6,
-    required String kondisi_7,
-    required String kondisi_8,
-    required String kondisi_9,
-    required String kondisi_10,
-    required String kondisi_11,
-    required String kondisi_12,
-    required String kondisi_13,
-    required String kondisi_14,
-    required String kondisi_15,
-    required String kondisi_16,
-    required String kondisi_17,
-    required String kondisi_18,
-    required String kondisi_19,
-    required String kondisi_20,
-    required String kondisi_21,
-    required String kondisi_22,
-    required String kondisi_23,
-    required String kondisi_24,
-    required String kondisi_25,
-    required String kondisi_26,
-    String? kode_1,
-    String? kode_2,
-    String? kode_3,
-    String? kode_4,
-    String? kode_5,
-    String? kode_6,
-    String? kode_7,
-    String? kode_8,
-    String? kode_9,
-    String? kode_10,
-    String? kode_11,
-    String? kode_12,
-    String? kode_13,
-    String? kode_14,
-    String? kode_15,
-    String? kode_16,
-    String? kode_17,
-    String? kode_18,
-    String? kode_19,
-    String? kode_20,
-    String? kode_21,
-    String? kode_22,
-    String? kode_23,
-    String? kode_24,
-    String? kode_25,
-    String? kode_26,
-    String? keterangan_1,
-    String? keterangan_2,
-    String? keterangan_3,
-    String? keterangan_4,
-    String? keterangan_5,
-    String? keterangan_6,
-    String? keterangan_7,
-    String? keterangan_8,
-    String? keterangan_9,
-    String? keterangan_10,
-    String? keterangan_11,
-    String? keterangan_12,
-    String? keterangan_13,
-    String? keterangan_14,
-    String? keterangan_15,
-    String? keterangan_16,
-    String? keterangan_17,
-    String? keterangan_18,
-    String? keterangan_19,
-    String? keterangan_20,
-    String? keterangan_21,
-    String? keterangan_22,
-    String? keterangan_23,
-    String? keterangan_24,
-    String? keterangan_25,
-    String? keterangan_26,
-    String? evident_1,
-    String? evident_2,
-    String? qr_1,
-    String? qr_2,
-    String? qr_3,
-    int? created_by_loading,
-  }) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
-
+  post(
+      {required String lokasi,
+      required String lokasi_detail,
+      required String shift,
+      String? grup,
+      String? nama_supervisor,
+      String? nama_pengawas,
+      String? pengawas_rh,
+      required String kondisi_1,
+      required String kondisi_2,
+      required String kondisi_3,
+      required String kondisi_4,
+      required String kondisi_5,
+      required String kondisi_6,
+      required String kondisi_7,
+      required String kondisi_8,
+      required String kondisi_9,
+      required String kondisi_10,
+      required String kondisi_11,
+      required String kondisi_12,
+      required String kondisi_13,
+      required String kondisi_14,
+      required String kondisi_15,
+      required String kondisi_16,
+      required String kondisi_17,
+      required String kondisi_18,
+      required String kondisi_19,
+      required String kondisi_20,
+      required String kondisi_21,
+      required String kondisi_22,
+      required String kondisi_23,
+      required String kondisi_24,
+      required String kondisi_25,
+      required String kondisi_26,
+      String? kode_1,
+      String? kode_2,
+      String? kode_3,
+      String? kode_4,
+      String? kode_5,
+      String? kode_6,
+      String? kode_7,
+      String? kode_8,
+      String? kode_9,
+      String? kode_10,
+      String? kode_11,
+      String? kode_12,
+      String? kode_13,
+      String? kode_14,
+      String? kode_15,
+      String? kode_16,
+      String? kode_17,
+      String? kode_18,
+      String? kode_19,
+      String? kode_20,
+      String? kode_21,
+      String? kode_22,
+      String? kode_23,
+      String? kode_24,
+      String? kode_25,
+      String? kode_26,
+      String? keterangan_1,
+      String? keterangan_2,
+      String? keterangan_3,
+      String? keterangan_4,
+      String? keterangan_5,
+      String? keterangan_6,
+      String? keterangan_7,
+      String? keterangan_8,
+      String? keterangan_9,
+      String? keterangan_10,
+      String? keterangan_11,
+      String? keterangan_12,
+      String? keterangan_13,
+      String? keterangan_14,
+      String? keterangan_15,
+      String? keterangan_16,
+      String? keterangan_17,
+      String? keterangan_18,
+      String? keterangan_19,
+      String? keterangan_20,
+      String? keterangan_21,
+      String? keterangan_22,
+      String? keterangan_23,
+      String? keterangan_24,
+      String? keterangan_25,
+      String? keterangan_26,
+      String? evident_1,
+      String? evident_2,
+      String? qr_1,
+      String? qr_2,
+      String? qr_3,
+      int? created_by_loading,
+      String? status}) async {
     DateTime now = DateTime.now();
-
-    // Mengformat tanggal sebagai string
     String formattedDate = DateFormat('yyyy-MM-dd').format(now);
-    // String formattedDate = "27-05-2024";
-
+    var headers = await _getHeaders();
     var response = await Dio().post(
       "${ApiUrl.baseUrl}/api/loadings",
-      options: Options(
-        headers: {
-          "Authorization": "bearer $token",
-          "Content-Type": "application/json"
-        },
-      ),
+      options: Options(headers: headers),
       data: {
         "data": {
           "lokasi": lokasi,
@@ -233,7 +218,8 @@ class LoadingService {
           "qr_1": qr_1,
           "qr_2": qr_2,
           "qr_3": qr_3,
-          "id_user": created_by_loading
+          "id_user": created_by_loading,
+          "status": status
         }
       },
     );
@@ -241,60 +227,34 @@ class LoadingService {
     return obj;
   }
 
-  put(
+  put_pengawas(
       {required int id,
-      String? lokasi,
-      String? lokasi_detail,
-      String? shift,
-      String? grup,
-      String? nama_supervisor,
-      String? nama_pengawas,
-      String? evident_1,
-      String? evident_2,
-      String? qr_1,
+      String? pengawas_rh,
       String? qr_2,
-      String? qr_3}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
+      String? status}) async {
+    var headers = await _getHeaders();
     var response = await Dio().put("${ApiUrl.baseUrl}/api/loadings/$id",
-        options: Options(
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "bearer $token"
-          },
-        ),
+        options: Options(headers: headers),
         data: {
-          "data": {
-            "lokasi": lokasi,
-            "nama_loading": lokasi_detail,
-            "shift": shift,
-            "grup": grup,
-            "nama_supervisor": nama_supervisor,
-            "nama_pengawas_mitra": nama_pengawas,
-            "evident_1": evident_1,
-            "evident_2": evident_2,
-            "qr_1": qr_1,
-            "qr_2": qr_2,
-            "qr_3": qr_3,
-          },
+          "data": {"Pengawas_rh": pengawas_rh, "qr_2": qr_2, "status": status},
         });
     Map obj = response.data;
     return obj;
   }
 
-  put_qr_3({required int id, String? qr_3}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
+  put_spv(
+      {required int id,
+      String? nama_supervisor,
+      String? qr_3,
+      String? status}) async {
+    var headers = await _getHeaders();
     var response = await Dio().put("${ApiUrl.baseUrl}/api/loadings/$id",
-        options: Options(
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "bearer $token"
-          },
-        ),
+        options: Options(headers: headers),
         data: {
           "data": {
+            "nama_supervisor": nama_supervisor,
             "qr_3": qr_3,
+            "status": status
           },
         });
     Map obj = response.data;

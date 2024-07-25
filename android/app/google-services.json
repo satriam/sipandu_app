@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "499488247754",
+    "project_id": "sipandu-8d3d2",
+    "storage_bucket": "sipandu-8d3d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:499488247754:android:1cca1f38a951804c690933",
+        "android_client_info": {
+          "package_name": "com.rehandling.sipandu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLP783IHHyTGE45XZmWEi5cubQX_KO9Y4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

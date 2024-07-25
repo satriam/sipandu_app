@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:SiPandu/core.dart';
-import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NewsController extends State<NewsView> {
@@ -14,7 +13,8 @@ class NewsController extends State<NewsView> {
   @override
   void initState() {
     instance = this;
-    getNews();
+    RefreshTokenService().refreshToken();
+    // getNews();
     getNama();
     super.initState();
   }
@@ -37,22 +37,25 @@ class NewsController extends State<NewsView> {
   List Information = [];
 
   Future<void> getNews() async {
-    setState(() {
-      isLoading = true; // Menampilkan efek shimmer
-    });
-    await Future.delayed(Duration(seconds: 2));
-    var response = await NewsService().get();
-    if (response is Map<String, dynamic> && response.containsKey('data')) {
-      List<dynamic> dataList = response['data'];
-      Information = dataList
-          .map((item) => item['attributes'] as Map<String, dynamic>)
-          .toList();
-    } else {
-      // Handle the case where response is not in the expected format
-      print("Response data is not in the expected format.");
+    try {
+      setState(() {
+        isLoading = true; // Menampilkan efek shimmer
+      });
+      var response = await NewsService().get();
+      if (response is Map<String, dynamic> && response.containsKey('data')) {
+        List<dynamic> dataList = response['data'];
+        Information = dataList
+            .map((item) => item['attributes'] as Map<String, dynamic>)
+            .toList();
+      } else {
+        // Handle the case where response is not in the expected format
+        print("Response data is not in the expected format.");
+      }
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      return;
     }
-    setState(() {
-      isLoading = false;
-    });
   }
 }

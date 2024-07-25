@@ -1,5 +1,3 @@
-import 'package:SiPandu/widget/dropdown_item.dart';
-import 'package:SiPandu/shared/widget/form/signature/signature.dart';
 import 'package:flutter/material.dart';
 import 'package:SiPandu/core.dart';
 
@@ -26,7 +24,7 @@ class NewsPostView extends StatefulWidget {
                     validator: Validator.required,
                     value: null,
                     onChanged: (value) {
-                      controller.test = value;
+                      controller.news = value;
                     },
                   ),
                   QCheckField(
@@ -35,37 +33,40 @@ class NewsPostView extends StatefulWidget {
                     items: [
                       {
                         "label": "Penting",
-                        "value": 101,
+                        "value": 1,
                         "checked": false,
                       },
                       {
                         "label": "Info",
-                        "value": 102,
+                        "value": 2,
                         "checked": false,
                       },
                       {
                         "label": "Rapat",
-                        "value": 102,
+                        "value": 3,
                         "checked": false,
                       },
                       {
                         "label": "Hazard Report",
-                        "value": 102,
+                        "value": 4,
                         "checked": false,
                       },
                       {
-                        "label": "Safety Campign",
-                        "value": 102,
+                        "label": "Safety Campaign",
+                        "value": 5,
                         "checked": false,
                       },
                     ],
-                    onChanged: (values, ids) {},
+                    onChanged: (values, ids) {
+                      controller.type = ids;
+                    },
                   ),
                   QImagePicker(
                     label: "Photo",
-                    validator: Validator.required,
                     value: null,
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      controller.photo = value;
+                    },
                   ),
                 ]),
               ))),

@@ -1,10 +1,6 @@
-import 'package:SiPandu/module/features/dumping_detail/widget/Pdf/pdf_dumping.dart';
-import 'package:SiPandu/module/features/dumping_detail/widget/shimmer_dumping1.dart';
-import 'package:SiPandu/widget/soal_item.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:SiPandu/core.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:shimmer/shimmer.dart';
 
 class DumpingDetailView extends StatefulWidget {
@@ -18,17 +14,17 @@ class DumpingDetailView extends StatefulWidget {
         appBar: AppBar(
           title: const Text("Dumping Detail"),
           actions: [
-            IconButton(
-              icon: const Icon(Icons.file_download),
-              onPressed: () async {
-                await Get.to(PdfDumping(data: controller.Data));
-              },
-            ),
+            if (!controller.isLoading)
+              IconButton(
+                icon: const Icon(Icons.file_download),
+                onPressed: () async {
+                  await Get.to(PdfDumping(data: controller.Data));
+                },
+              ),
           ],
         ),
         body: SingleChildScrollView(
             child: Container(
-          key: controller.formKey,
           padding: const EdgeInsets.all(10.0),
           child: Form(
             child: Column(
@@ -47,7 +43,7 @@ class DumpingDetailView extends StatefulWidget {
                           // Menampilkan Image.network jika gambar sudah dimuat
                           Image.network(
                             controller.Data['attributes']?['evident_1'] ??
-                                "${ApiUrl.baseUrl}/uploads/thumbnail_no_image_251fa67e50.jpg",
+                                "https://sipandu-api.rehandling.my.id/uploads/no_image_b1d966e1bd.jpg",
                             width: 150,
                             height: 150,
                           ),
@@ -1831,7 +1827,8 @@ class DumpingDetailView extends StatefulWidget {
                       ),
                     ),
                   ),
-                if (controller.role.toString() == "User")
+                if (controller.role.toString() == "User" ||
+                    controller.role.toString() == "Mitra")
                   Card(
                     elevation: 4,
                     child: Container(
@@ -1866,7 +1863,7 @@ class DumpingDetailView extends StatefulWidget {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Image.network(
                                       controller.Data['attributes']?['qr_1'] ??
-                                          "${ApiUrl.baseUrl}/uploads/thumbnail_no_image_251fa67e50.jpg",
+                                          "https://sipandu-api.rehandling.my.id/uploads/no_image_b1d966e1bd.jpg",
                                       width: 100,
                                       height: 100,
                                     ),
@@ -1875,7 +1872,7 @@ class DumpingDetailView extends StatefulWidget {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Image.network(
                                       controller.Data['attributes']?['qr_3'] ??
-                                          "${ApiUrl.baseUrl}/uploads/thumbnail_no_image_251fa67e50.jpg",
+                                          "https://sipandu-api.rehandling.my.id/uploads/no_image_b1d966e1bd.jpg",
                                       width: 100,
                                       height: 100,
                                     ),
@@ -1957,7 +1954,7 @@ class DumpingDetailView extends StatefulWidget {
                           ],
                         ),
                         btnOkOnPress: () {
-                          print(controller.supervisor);
+                          // print(controller.supervisor);
                           if (controller.supervisor == null) {
                             AwesomeDialog(
                               context: context,
@@ -1970,11 +1967,86 @@ class DumpingDetailView extends StatefulWidget {
                             ).show();
                           } else {
                             controller.doUpdate();
+                            controller.getData(controller.id);
                           }
                         },
                       ).show();
                     },
                   ),
+                if (controller.role.toString() == "User" &&
+                    controller.Data['attributes']?['qr_2'] == null)
+                  AnimatedButton(
+                      text: 'Accept from pengawas rehandling',
+                      color: successColor,
+                      pressEvent: () {
+                        AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.noHeader,
+                          animType: AnimType.rightSlide,
+                          headerAnimationLoop: true,
+                          title: 'Question',
+                          dismissOnBackKeyPress: false,
+                          dismissOnTouchOutside: false,
+                          body: Column(
+                            children: [
+                              QSignature(
+                                id: 'Pengawas', // unique id for Pengawas Rehandling
+                                label: 'Tanda Tangan Pengawas Rehandling',
+                                hint: 'Sign here',
+                                helper: 'Please provide your signature',
+                                onChanged: (value) {
+                                  controller.pengawasrehandling = value;
+                                },
+                                onSubmitted: (signature) async {
+                                  await showDialog<void>(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Berhasil!'),
+                                        content: const SingleChildScrollView(
+                                          child: ListBody(
+                                            children: <Widget>[
+                                              Text(
+                                                  'Berhasil Simpan tanda tangan Pengawas Rehandling'),
+                                            ],
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.blueGrey,
+                                            ),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text("Ok"),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              )
+                            ],
+                          ),
+                          btnOkOnPress: () {
+                            if (controller.pengawasrehandling == null) {
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.error,
+                                animType: AnimType.rightSlide,
+                                headerAnimationLoop: true,
+                                title: "Gagal Simpan!",
+                                desc: "Data Kosong",
+                              ).show();
+                            } else {
+                              controller.doUpdate();
+                              controller.getData(controller.id);
+                            }
+                          },
+                        ).show();
+                      }),
               ],
             ),
           ),

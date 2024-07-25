@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:SiPandu/core.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,10 +10,15 @@ class LoadingController extends State<LoadingView> {
   int? userId;
   String? nama;
   String? role;
+  String? grup;
+  List Loading = [].obs;
+  var filteredLoading = [].obs;
+  var selectedCategory = "".obs;
 
   @override
   void initState() {
     instance = this;
+    RefreshTokenService().refreshToken();
     getProfile();
     getNama();
     super.initState();
@@ -30,33 +34,64 @@ class LoadingController extends State<LoadingView> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     nama = prefs.getString('nama');
     role = prefs.getString('role');
+    grup = prefs.getString('grup');
     userId = prefs.getInt('id_user');
-    // print(nama);
-    // await getProfile();
   }
-
-  List Loading = [];
 
   Future<void> getProfile() async {
     setState(() {
       isLoading = true; // Menampilkan efek shimmer
     });
-    // await Future.delayed(Duration(seconds: 10));
-    var allData = await LoadingService().get();
-    // Loading = await LoadingService().get();
 
-    setState(() {
-      if (role == "Supervisor") {
-        Loading = allData.where((item) {
-          return item['attributes']['nama_supervisor'] == nama;
-        }).toList();
-      } else {
-        Loading = allData.where((item) {
-          return item['attributes']['id_user'] == userId;
-        }).toList();
-        // Menghentikan efek shimmer
+    try {
+      bool isTokenValid = await NetworkController().checkTokenStatus();
+      if (!isTokenValid) {
+        return;
       }
-      isLoading = false;
-    });
+
+      var allData = await LoadingService().get();
+
+      if (mounted) {
+        setState(() {
+          if (role == "Supervisor") {
+            Loading = allData.where((item) {
+              return item['attributes']['grup'] == grup;
+            }).toList();
+          } else if (role == "Mitra") {
+            Loading = allData.where((item) {
+              return item['attributes']['id_user'] == userId;
+            }).toList();
+            print(Loading);
+          } else {
+            Loading = allData.where((item) {
+              return item['attributes']['id_user'] == userId &&
+                      item['attributes']['grup'] == grup ||
+                  item['attributes']['status'] == "Waiting Approval Inspector";
+            }).toList();
+            // Menghentikan efek shimmer
+          }
+          filterLoading();
+          isLoading = false;
+        });
+      }
+    } catch (e) {}
+  }
+
+  void filterLoading() {
+    if (selectedCategory.value.isEmpty) {
+      filteredLoading.value = Loading;
+    } else {
+      filteredLoading.value = Loading.where((item) {
+        var categoryMatches =
+            item['attributes']['status'] == selectedCategory.value;
+
+        return categoryMatches;
+      }).toList();
+    }
+  }
+
+  void updateCategory(String category) {
+    selectedCategory.value = category;
+    filterLoading();
   }
 }

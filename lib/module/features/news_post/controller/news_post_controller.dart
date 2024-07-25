@@ -10,13 +10,16 @@ class NewsPostController extends State<NewsPostView> {
   @override
   void initState() {
     instance = this;
+    RefreshTokenService().refreshToken();
     // dosave();
     getmemory();
     super.initState();
   }
 
-  String? test;
+  String? news;
   int? id_user;
+  List? type;
+  String? photo;
   @override
   void dispose() => super.dispose();
 
@@ -26,11 +29,13 @@ class NewsPostController extends State<NewsPostView> {
   }
 
   dosave() async {
+    print(type);
     bool isValid = formKey.currentState!.validate();
     if (!isValid) {
       return;
     }
-    await NewsService().post(information: test, id: id_user);
+    await NewsService()
+        .post(information: news, id: id_user, news_type: type, photo: photo);
 
     AwesomeDialog(
       context: context,
@@ -38,7 +43,7 @@ class NewsPostController extends State<NewsPostView> {
       headerAnimationLoop: false,
       animType: AnimType.topSlide,
       title: 'Berhasil',
-      desc: 'Berhasil Menyimpan data Loading',
+      desc: 'Berhasil Menyimpan Informasi',
       btnOkOnPress: () => Get.back(),
     ).show();
   }

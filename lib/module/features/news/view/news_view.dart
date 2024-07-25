@@ -45,9 +45,17 @@ class NewsView extends StatefulWidget {
                         return DateFormat('dd/MM/yyyy kk:mm').format(dateTime);
                       }
 
+                      var newsTypes = item['news_types']['data'];
+                      List<Widget> badgeWidgets = [];
+
+                      for (var newsType in newsTypes) {
+                        badgeWidgets.add(
+                            PillBadge(text: newsType['attributes']['type']));
+                      }
+
                       return InkWell(
                           onTap: () async {
-                            await Get.to(HaulingDetailView(item: item));
+                            // await Get.to(HaulingDetailView(item: item));
                           },
                           child: Card(
                             surfaceTintColor: Colors.white10,
@@ -88,9 +96,7 @@ class NewsView extends StatefulWidget {
                                           ),
                                           Text(
                                             formatDate(item['createdAt']),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .caption,
+
                                             // item['attributes']['tanggal'],
                                           ),
                                         ],
@@ -100,14 +106,19 @@ class NewsView extends StatefulWidget {
                                   Divider(
                                     height: 5,
                                   ),
-                                  Text(item['information'] ?? ""),
+                                  FormattedText(item['information'] ?? ""),
+                                  item['photo'] != null
+                                      ? Image.network(
+                                          item['photo'],
+                                        )
+                                      : Container(),
                                   Divider(
                                     height: 5,
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     // Memposisikan PillBadge di sebelah kanan
-                                    children: [PillBadge(text: "Penting")],
+                                    children: badgeWidgets,
                                   )
                                 ],
                               ),
@@ -218,6 +229,53 @@ class ShimmerNewsListItem extends StatelessWidget {
   }
 }
 
+class FormattedText extends StatelessWidget {
+  final String text;
+
+  FormattedText(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    List<TextSpan> spans = _getSpans(text);
+    return RichText(
+      text: TextSpan(
+        style: DefaultTextStyle.of(context).style,
+        children: spans,
+      ),
+    );
+  }
+
+  List<TextSpan> _getSpans(String text) {
+    List<TextSpan> spans = [];
+    final RegExp regex = RegExp(r'(\*\*(.*?)\*\*)|(__((.*?)__))');
+    final matches = regex.allMatches(text);
+
+    int start = 0;
+    for (final match in matches) {
+      if (match.start > start) {
+        spans.add(TextSpan(text: text.substring(start, match.start)));
+      }
+      if (match.group(1) != null) {
+        spans.add(TextSpan(
+          text: match.group(2),
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ));
+      } else if (match.group(3) != null) {
+        spans.add(TextSpan(
+          text: match.group(4),
+          style: TextStyle(decoration: TextDecoration.underline),
+        ));
+      }
+      start = match.end;
+    }
+    if (start < text.length) {
+      spans.add(TextSpan(text: text.substring(start)));
+    }
+
+    return spans;
+  }
+}
+
 class PillBadge extends StatelessWidget {
   final String text;
 
@@ -225,18 +283,45 @@ class PillBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
-      decoration: BoxDecoration(
-        color: Colors.red, // Warna latar belakang badge
-        borderRadius:
-            BorderRadius.circular(15.0), // Membuat ujung badge melengkung
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: Colors.white, // Warna teks
-          fontWeight: FontWeight.bold,
+    Color backgroundColor;
+
+    switch (text.toLowerCase()) {
+      case 'penting':
+        backgroundColor = Colors.red;
+        break;
+      case 'hazard report':
+        backgroundColor = Colors.orange;
+        break;
+      case 'info':
+        backgroundColor = Colors.green;
+        break;
+      case 'rapat':
+        backgroundColor = Colors.blue;
+        break;
+      case 'safety campaign':
+        backgroundColor = Colors.grey;
+        break;
+      default:
+        backgroundColor =
+            Colors.grey; // Warna default jika tidak ada yang cocok
+    }
+
+    return Material(
+      elevation: 4.0, // Menambahkan elevasi untuk efek bayangan
+      borderRadius: BorderRadius.circular(15.0),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 8,
+          ),
         ),
       ),
     );
