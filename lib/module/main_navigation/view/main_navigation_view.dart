@@ -15,7 +15,7 @@ class MainNavigationView extends StatefulWidget {
           index: controller.selectedIndex,
           children: [
             DashboardView(),
-            // NewsView(),
+            NewsView(),
             ProfileView(),
           ],
         ),
@@ -43,12 +43,12 @@ class MainNavigationView extends StatefulWidget {
               ),
               label: "Home",
             ),
-            // BottomNavigationBarItem(
-            //   icon: Icon(
-            //     MdiIcons.message,
-            //   ),
-            //   label: "News",
-            // ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                MdiIcons.message,
+              ),
+              label: "News",
+            ),
             BottomNavigationBarItem(
               icon: Icon(
                 MdiIcons.faceMan,

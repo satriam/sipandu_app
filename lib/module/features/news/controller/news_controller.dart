@@ -16,6 +16,7 @@ class NewsController extends State<NewsView> {
     RefreshTokenService().refreshToken();
     // getNews();
     getNama();
+    getAll();
     super.initState();
   }
 
@@ -51,6 +52,29 @@ class NewsController extends State<NewsView> {
         // Handle the case where response is not in the expected format
         print("Response data is not in the expected format.");
       }
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      return;
+    }
+  }
+
+  Future<void> getAll() async {
+    try {
+      setState(() {
+        isLoading = true; // Menampilkan efek shimmer
+      });
+      var response = await ProfileService().getall();
+      // if (response is Map<String, dynamic> && response.containsKey('data')) {
+      //   List<dynamic> dataList = response['data'];
+      //   Information = dataList
+      //       .map((item) => item['attributes'] as Map<String, dynamic>)
+      //       .toList();
+      // } else {
+      //   // Handle the case where response is not in the expected format
+      //   print("Response data is not in the expected format.");
+      // }
       setState(() {
         isLoading = false;
       });

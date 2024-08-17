@@ -41,6 +41,17 @@ class Validator {
     return null;
   }
 
+  static String? validateConfirmPassword(
+      String? confirmPassword, String? newPassword) {
+    if (confirmPassword == null || confirmPassword.isEmpty) {
+      return "Konfirmasi Password wajib diisi";
+    }
+    if (newPassword != confirmPassword) {
+      return "Konfirmasi Password tidak cocok";
+    }
+    return null;
+  }
+
   static String? number(String? value) {
     if (value!.isEmpty) return "This field is required";
 

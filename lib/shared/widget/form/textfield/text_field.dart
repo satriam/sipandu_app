@@ -90,7 +90,6 @@ class _QTextFieldState extends State<QTextField> {
           ),
           helperText: widget.helper,
           hintText: widget.hint,
-          errorText: _isValid ? null : 'This field is required',
         ),
         onChanged: (value) {
           _validateInput(value);

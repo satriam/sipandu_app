@@ -31,4 +31,25 @@ class ProfileService {
       return null;
     }
   }
+
+  Future<dynamic> getall() async {
+    try {
+      var headers = await _getHeaders();
+      var response = await Dio().get(
+        "${ApiUrl.baseUrl}/api/users",
+        options: Options(headers: headers),
+      );
+
+      if (response.statusCode == 200) {
+        print(response.data);
+        return response.data;
+      } else {
+        print("Error: ${response.statusCode}");
+        return null;
+      }
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
 }

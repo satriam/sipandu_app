@@ -2399,7 +2399,8 @@ class LoadingDetailView extends StatefulWidget {
                       ),
                     ),
                   )
-                else if (controller.Data['attributes']?['qr_3'] == null)
+                else if (controller.role.toString() == "Supervisor" &&
+                    controller.Data['attributes']?['qr_2'] != null)
                   AnimatedButton(
                     text: 'Accept Report',
                     color: successColor,
@@ -2409,52 +2410,60 @@ class LoadingDetailView extends StatefulWidget {
                         dialogType: DialogType.noHeader,
                         animType: AnimType.rightSlide,
                         headerAnimationLoop: true,
-                        title: 'Question',
+                        title: 'Tanda Tangan',
                         body: Column(
                           children: [
                             QSignature(
                               id: 'supervisor', // unique id for Pengawas Rehandling
                               label: 'Tanda Tangan Supervisor',
                               hint: 'Sign here',
-                              helper: 'Please provide your signature',
+                              helper: 'Jangan Lupa Untuk Menekan button save!',
                               onChanged: (value) {
                                 controller.supervisor = value;
                               },
                               onSubmitted: (signature) async {
-                                await showDialog<void>(
+                                AwesomeDialog(
                                   context: context,
-                                  barrierDismissible: true,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Berhasil!'),
-                                      content: const SingleChildScrollView(
-                                        child: ListBody(
-                                          children: <Widget>[
-                                            Text(
-                                                'Berhasil Simpan tanda tangan Supervisor'),
-                                          ],
-                                        ),
-                                      ),
-                                      actions: <Widget>[
-                                        ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.blueGrey,
-                                          ),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text("Ok"),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
+                                  dialogType: DialogType.success,
+                                  animType: AnimType.rightSlide,
+                                  headerAnimationLoop: true,
+                                  title: "Berhasil!",
+                                  desc: "Data Tanda tangan tersimpan!",
+                                ).show();
+
+                                // await showDialog<void>(
+                                //   context: context,
+                                //   barrierDismissible: true,
+                                //   builder: (BuildContext context) {
+                                //     return AlertDialog(
+                                //       title: const Text('Berhasil!'),
+                                //       content: const SingleChildScrollView(
+                                //         child: ListBody(
+                                //           children: <Widget>[
+                                //             Text(
+                                //                 'Berhasil Simpan tanda tangan Supervisor'),
+                                //           ],
+                                //         ),
+                                //       ),
+                                //       actions: <Widget>[
+                                //         ElevatedButton(
+                                //           style: ElevatedButton.styleFrom(
+                                //             backgroundColor: Colors.blueGrey,
+                                //           ),
+                                //           onPressed: () {
+                                //             Navigator.pop(context);
+                                //           },
+                                //           child: const Text("Ok"),
+                                //         ),
+                                //       ],
+                                //     );
+                                //   },
+                                // );
                               },
                             ),
                           ],
                         ),
                         btnOkOnPress: () {
-                          print(controller.supervisor);
                           if (controller.supervisor == null) {
                             AwesomeDialog(
                               context: context,

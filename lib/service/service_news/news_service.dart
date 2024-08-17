@@ -30,18 +30,22 @@ class NewsService {
 
   post({String? information, int? id, List? news_type, String? photo}) async {
     var headers = await _getHeaders();
-    var response = await Dio().post("${ApiUrl.baseUrl}/api/information",
-        options: Options(headers: headers),
-        data: {
-          "data": {
-            "information": information,
-            "users_permissions_user": id,
-            "news_types": news_type,
-            "photo": photo
-          }
-        });
-    Map obj = response.data;
-    // print(obj);
-    return obj;
+    try {
+      var response = await Dio().post("${ApiUrl.baseUrl}/api/information",
+          options: Options(headers: headers),
+          data: {
+            "data": {
+              "information": information,
+              "users_permissions_user": id,
+              "news_types": news_type,
+              "photo": photo
+            }
+          });
+      Map obj = response.data;
+      // print(obj);
+      return obj;
+    } catch (e) {
+      return null;
+    }
   }
 }

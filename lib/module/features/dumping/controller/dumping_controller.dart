@@ -56,6 +56,10 @@ class DumpingController extends State<DumpingView> {
             Dumping = allData.where((item) {
               return item['attributes']['grup'] == grup;
             }).toList();
+          } else if (role == "Mitra") {
+            Dumping = allData.where((item) {
+              return item['attributes']['id_user'] == userId;
+            }).toList();
           } else {
             Dumping = allData.where((item) {
               return item['attributes']['id_user'] == userId &&

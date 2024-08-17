@@ -1,7 +1,7 @@
-import 'package:SiPandu/module/register/view/register_view.dart';
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:SiPandu/core.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -104,6 +104,7 @@ class LoginView extends StatefulWidget {
                         children: [
                           TextFormField(
                             keyboardType: TextInputType.emailAddress,
+                            validator: Validator.required,
                             textInputAction: TextInputAction.next,
                             cursorColor: Colors.blueGrey,
                             onChanged: (value) {
@@ -126,6 +127,7 @@ class LoginView extends StatefulWidget {
                               onChanged: (value) {
                                 controller.password = value;
                               },
+                              validator: Validator.required,
                               decoration: InputDecoration(
                                 hintText: "Your password",
                                 prefixIcon: Padding(

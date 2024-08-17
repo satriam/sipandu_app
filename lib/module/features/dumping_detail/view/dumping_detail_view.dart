@@ -1899,7 +1899,8 @@ class DumpingDetailView extends StatefulWidget {
                       ),
                     ),
                   )
-                else if (controller.Data['attributes']?['qr_3'] == null)
+                else if (controller.role.toString() == "Supervisor" &&
+                    controller.Data['attributes']?['qr_2'] != null)
                   AnimatedButton(
                     text: 'Accept Report',
                     color: successColor,

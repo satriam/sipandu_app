@@ -1,4 +1,3 @@
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:SiPandu/core.dart';
@@ -43,6 +42,10 @@ class HaulingPostView extends StatefulWidget {
                           {
                             "label": "Banko",
                             "value": "Banko",
+                          },
+                          {
+                            "label": "FOB MV",
+                            "value": "FOB MV",
                           }
                         ],
                         value: controller.lokasi,
@@ -54,7 +57,7 @@ class HaulingPostView extends StatefulWidget {
                       QAutoComplete(
                         label: "Nama Lokasi Detail",
                         validator: Validator.required,
-                        items: Location_item.items,
+                        items: location_hauling.items,
                         value: controller.lokasi_detail,
                         onChanged: (value, label) {
                           controller.lokasi_detail = value;
@@ -64,11 +67,12 @@ class HaulingPostView extends StatefulWidget {
                       SizedBox(height: 10),
                       if (controller.role.toString() == "User" ||
                           controller.role.toString() == "Supervisor")
-                        QTextField(
+                        QAutoComplete(
                           label: "Nama Pengawas Mitra",
                           validator: Validator.required,
+                          items: PengawasMitra.items,
                           value: null,
-                          onChanged: (value) {
+                          onChanged: (value, label) {
                             controller.nama_mitra = value;
                           },
                         ),

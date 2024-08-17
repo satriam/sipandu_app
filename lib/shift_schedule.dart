@@ -52,12 +52,22 @@ class ShiftSchedule {
 
   String getActiveGroupForCurrentShift() {
     DateTime currentDate = DateTime.now();
+    // String dateString = "2024-08-08 05:00:21.979853";
+    // DateTime currentDate = DateTime.parse(dateString);
+    // print(currentDate.toString());
     String shiftForGroupA = getShiftForDate(2, currentDate);
     String shiftForGroupB = getShiftForDate(3, currentDate);
     String shiftForGroupC = getShiftForDate(0, currentDate);
     String shiftForGroupD = getShiftForDate(1, currentDate);
 
     String currentShift = getCurrentShift(currentDate);
+    // print("----------------------------------------------------------------");
+    // print(currentDate.toString());
+    // // print(currentShift.toString());
+
+    // print(shiftForGroupD.toString() + " Shift D");
+    // print(shiftForGroupA.toString() + " Shift A");
+    // print(shiftForGroupB.toString() + " Shift B");
 
     if (currentShift == shiftForGroupA) {
       return "Grup A";
@@ -73,6 +83,31 @@ class ShiftSchedule {
   }
 
   String getShiftForDate(int groupInitialShiftIndex, DateTime currentDate) {
+    // Define the start and end times for shift 1
+    DateTime shiftStartTime =
+        DateTime(currentDate.year, currentDate.month, currentDate.day, 22, 0);
+    DateTime shiftEndTime = shiftStartTime.add(Duration(hours: 8));
+
+    // Determine the current shift
+    String currentShift = getCurrentShift(currentDate);
+
+    if (currentShift == "Shift 1") {
+      // Check if the currentDate is within the Shift 1 period
+      if (currentDate.isAfter(shiftStartTime) ||
+          currentDate.isBefore(shiftEndTime)) {
+        // If currentDate is before 06:00, consider it part of the previous day
+        DateTime referenceDate = currentDate.isBefore(shiftEndTime)
+            ? currentDate.subtract(Duration(days: 1))
+            : currentDate;
+
+        int daysSinceStart = referenceDate.difference(startDate).inDays;
+        int shiftRotation =
+            (daysSinceStart ~/ rotationInterval) % shifts.length;
+        return shifts[(groupInitialShiftIndex + shiftRotation) % shifts.length];
+      }
+    }
+
+    // For other shifts, or if not in Shift 1 period, use the regular calculation
     int daysSinceStart = currentDate.difference(startDate).inDays;
     int shiftRotation = (daysSinceStart ~/ rotationInterval) % shifts.length;
     return shifts[(groupInitialShiftIndex + shiftRotation) % shifts.length];

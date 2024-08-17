@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:SiPandu/core.dart';
+import 'package:SiPandu/testting_something/ui/textstyel.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signature/signature.dart';
@@ -149,7 +150,8 @@ class _QSignatureState extends State<QSignature> {
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
                 widget.helper!,
-                style: const TextStyle(color: Colors.grey),
+                style: const TextStyle(
+                    color: Colors.red, fontWeight: FontWeight.w900),
               ),
             ),
         ],

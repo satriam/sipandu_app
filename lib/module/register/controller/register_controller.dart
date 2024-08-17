@@ -1,9 +1,6 @@
 import 'package:SiPandu/module/register/view/register_view.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:SiPandu/core.dart';
-// import 'package:hyper_ui/module/dashboard/view/main_navigation_view.dart'; // Import your MainNavigationView
-import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
 
 class RegisterController extends State<RegisterView> {
   static late RegisterController instance;

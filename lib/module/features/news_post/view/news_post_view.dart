@@ -33,27 +33,27 @@ class NewsPostView extends StatefulWidget {
                     items: [
                       {
                         "label": "Penting",
-                        "value": 1,
-                        "checked": false,
-                      },
-                      {
-                        "label": "Info",
                         "value": 2,
                         "checked": false,
                       },
                       {
-                        "label": "Rapat",
+                        "label": "Info",
                         "value": 3,
                         "checked": false,
                       },
                       {
-                        "label": "Hazard Report",
+                        "label": "Rapat",
                         "value": 4,
                         "checked": false,
                       },
                       {
-                        "label": "Safety Campaign",
+                        "label": "Hazard Report",
                         "value": 5,
+                        "checked": false,
+                      },
+                      {
+                        "label": "Safety Campaign",
+                        "value": 6,
                         "checked": false,
                       },
                     ],

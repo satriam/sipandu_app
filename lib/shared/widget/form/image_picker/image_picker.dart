@@ -45,29 +45,16 @@ class _QImagePickerState extends State<QImagePicker> {
     super.initState();
   }
 
-  Future<String?> getFileMultiplePlatform() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: [
-        "png",
-        "jpg",
-      ],
-      allowMultiple: false,
-    );
-    if (result == null) return null;
-    return result.files.first.path;
-  }
-
-  Future<String?> getFileAndroidIosAndWeb() async {
+  Future<String?> getFileAndroidIosAndWeb({bool fromCamera = false}) async {
     XFile? image = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
+      source: fromCamera ? ImageSource.camera : ImageSource.gallery,
       maxHeight: 1080,
       maxWidth: 1920,
     );
     String? filePath = image?.path;
     if (filePath == null) return null;
 
-    // Perbaiki orientasi gambar
+    // Fix image rotation
     if (Platform.isAndroid || Platform.isIOS) {
       File rotatedFile =
           await FlutterExifRotation.rotateAndSaveImage(path: filePath);
@@ -106,7 +93,20 @@ class _QImagePickerState extends State<QImagePicker> {
     return url;
   }
 
-  browsePhoto() async {
+  Future<String?> getFileMultiplePlatform() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: [
+        "png",
+        "jpg",
+      ],
+      allowMultiple: false,
+    );
+    if (result == null) return null;
+    return result.files.first.path;
+  }
+
+  browsePhoto({bool fromCamera = false}) async {
     if (loading) return;
 
     String? filePath;
@@ -116,9 +116,14 @@ class _QImagePickerState extends State<QImagePicker> {
     if (!kIsWeb && Platform.isWindows) {
       filePath = await getFileMultiplePlatform();
     } else {
-      filePath = await getFileAndroidIosAndWeb();
+      filePath = await getFileAndroidIosAndWeb(fromCamera: fromCamera);
     }
-    if (filePath == null) return;
+
+    if (filePath == null) {
+      loading = false; // Reset loading state if no file was selected
+      setState(() {});
+      return;
+    }
 
     imageUrl = await uploadFile(filePath);
 
@@ -223,16 +228,31 @@ class _QImagePickerState extends State<QImagePicker> {
                       suffixIcon: Transform.scale(
                         scale: 0.8,
                         child: SizedBox(
-                          width: 80.0,
-                          child: ElevatedButton(
-                            style: Theme.of(context).elevatedButtonTheme.style,
-                            onPressed: () => browsePhoto(),
-                            child: Text(
-                              "Browse",
-                              style: TextStyle(
-                                fontSize: 12.0,
+                          width: 160.0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ElevatedButton(
+                                style:
+                                    Theme.of(context).elevatedButtonTheme.style,
+                                onPressed: () => browsePhoto(),
+                                child: Text(
+                                  "Browse",
+                                  style: TextStyle(
+                                    fontSize: 12.0,
+                                  ),
+                                ),
                               ),
-                            ),
+                              ElevatedButton(
+                                style:
+                                    Theme.of(context).elevatedButtonTheme.style,
+                                onPressed: () => browsePhoto(fromCamera: true),
+                                child: Icon(
+                                  Icons.camera_alt,
+                                  size: 16.0,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),

@@ -42,6 +42,10 @@ class LoadingPostView extends StatefulWidget {
                             {
                               "label": "Banko",
                               "value": "Banko",
+                            },
+                            {
+                              "label": "FOB MV",
+                              "value": "FOB MV",
                             }
                           ],
                           value: controller.lokasi,
@@ -63,11 +67,12 @@ class LoadingPostView extends StatefulWidget {
                         SizedBox(height: 10),
                         if (controller.role.toString() == "User" ||
                             controller.role.toString() == "Supervisor")
-                          QTextField(
+                          QAutoComplete(
                             label: "Nama Pengawas Mitra",
                             validator: Validator.required,
+                            items: PengawasMitra.items,
                             value: null,
-                            onChanged: (value) {
+                            onChanged: (value, label) {
                               controller.nama_mitra = value;
                             },
                           ),

@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:SiPandu/core.dart';
 import 'package:http/http.dart' as http;
 import 'package:pdf/widgets.dart' as pw;
 

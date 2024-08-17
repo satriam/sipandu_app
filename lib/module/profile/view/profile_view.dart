@@ -7,7 +7,8 @@ class ProfileView extends StatefulWidget {
 
   Widget build(context, ProfileController controller) {
     controller.view = this;
-    String? thumbnailUrl = controller.profile['profile_image'] ?? "null";
+    String? thumbnailUrl = controller.profile['profile_image'] ??
+        "https://sipandu-api.rehandling.my.id/uploads/no_image_b1d966e1bd.jpg";
     String fullThumbnailUrl = thumbnailUrl != null ? '$thumbnailUrl' : '';
 
     return Scaffold(
@@ -202,15 +203,8 @@ class ProfileView extends StatefulWidget {
                     {
                       "label": "Change Password",
                       "icon": Icons.password,
-                      "on_tap": () {
-                        return AwesomeDialog(
-                          context: context,
-                          dialogType: DialogType.info,
-                          headerAnimationLoop: true,
-                          animType: AnimType.topSlide,
-                          desc: 'Sedang Tahap Pengembangan',
-                          btnOkOnPress: () => Get.back(),
-                        ).show();
+                      "on_tap": () async {
+                        await Get.to(ChangePasswordView());
                       }
                     },
                     {

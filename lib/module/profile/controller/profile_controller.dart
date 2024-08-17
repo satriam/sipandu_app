@@ -16,7 +16,6 @@ class ProfileController extends State<ProfileView> {
     RefreshTokenService().refreshToken();
     getNama();
     _initPackageInfo();
-
     super.initState();
   }
 

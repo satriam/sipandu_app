@@ -28,12 +28,6 @@ class DashboardView extends StatefulWidget {
       },
     ];
 
-    List carousel = [
-      'assets/icon/apple-logo.png',
-      'assets/icon/apple-logo.png',
-      'assets/icon/apple-logo.png',
-    ];
-
     return Scaffold(
         extendBody: true,
         extendBodyBehindAppBar: true,
@@ -369,28 +363,28 @@ class DashboardView extends StatefulWidget {
                             ));
                       },
                     ),
-                    const SizedBox(height: 10),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                          children: List.generate(carousel.length, (index) {
-                        var item = carousel[index];
-                        return Card(
-                          child: Container(
-                            height: 120,
-                            width: MediaQuery.of(context).size.width - 100,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage(
-                                    '$item'), // Use AssetImage for local assets
-                              ),
-                            ),
-                          ),
-                        );
-                      })),
-                    ),
+                    // const SizedBox(height: 10),
+                    // SingleChildScrollView(
+                    //   scrollDirection: Axis.horizontal,
+                    //   child: Row(
+                    //       children: List.generate(carousel.length, (index) {
+                    //     var item = carousel[index];
+                    //     return Card(
+                    //       child: Container(
+                    //         height: 120,
+                    //         width: MediaQuery.of(context).size.width - 100,
+                    //         decoration: BoxDecoration(
+                    //           borderRadius: BorderRadius.circular(15),
+                    //           image: DecorationImage(
+                    //             fit: BoxFit.cover,
+                    //             image: AssetImage(
+                    //                 '$item'), // Use AssetImage for local assets
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     );
+                    //   })),
+                    // ),
                   ],
                 ),
               ),

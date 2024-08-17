@@ -56,7 +56,11 @@ class HaulingController extends State<HaulingView> {
             Hauling = allData.where((item) {
               return item['attributes']['grup'] == grup;
             }).toList();
-          } else {
+          } else if (role == "Mitra") {
+            Hauling = allData.where((item) {
+              return item['attributes']['id_user'] == userId;
+            }).toList();
+          }else {
             Hauling = allData.where((item) {
               return item['attributes']['id_user'] == userId &&
                       item['attributes']['grup'] == grup ||
